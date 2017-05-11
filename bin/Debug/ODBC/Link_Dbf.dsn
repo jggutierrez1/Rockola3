@@ -1,0 +1,8 @@
+[ODBC]
+SourceDB=C:\Shared\Desarrollo\Dev_Flam\Rockola3\bin\Debug\TMP
+Exclusive=No
+DRIVER=Microsoft Visual FoxPro Driver
+Collate=Machine
+BackgroundFetch=Yes
+UID
+SourceType=DBF

@@ -1,0 +1,14 @@
+[ODBC]
+DefaultDir=C:\Shared\Desarrollo\Dev_Flam\Rockola3\bin\Debug\FILES1
+DriverId=27
+MaxScanRows=50
+DBQ=C:\Shared\Desarrollo\Dev_Flam\Rockola3\bin\Debug\FILES1
+PageTimeout=5
+Extensions=txt,csv,tab,asc
+DRIVER=Driver da Microsoft para arquivos texto (*.txt; *.csv)
+UID=admin
+SafeTransactions=0
+MaxBufferSize=2048
+Threads=3
+FIL=Text
+UserCommitSync=Yes

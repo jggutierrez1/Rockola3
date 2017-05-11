@@ -1,0 +1,9 @@
+[ODBC]
+DRIVER2=Microsoft Visual FoxPro Driver
+DRIVER=Driver para o Microsoft Visual FoxPro
+UID=
+Collate=Machine
+BackgroundFetch=Yes
+Exclusive=No
+SourceType=DBF
+SourceDB=D:\Rockola\TMP
