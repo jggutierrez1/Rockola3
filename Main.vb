@@ -699,7 +699,7 @@ Public Class FMain
         igLen2 = 0 : igNo_RgAt = 0
         igAct_PgG = 1 : igTot_PgG = 8 : igTot_PgC = 8
         igAct_PgD = 1 : igTot_PgD = 8 : igTot_PgC = 0
-        igMax_Gen = 13 - 2 : igMax_Dis = 13 : igMax_Can = 13 - 2 'valores fijos su valor no pueded ser superior
+        igMax_Gen = 13 - 2 : igMax_Dis = 12 : igMax_Can = 13 'valores fijos su valor no pueded ser superior
         igInd_Bon = 0
         igNext_Bonus = 0
         piCnt_Canc = 0
@@ -931,6 +931,8 @@ Public Class FMain
 
         Me.Cargar_Gen()
         Me.Desactiva_Genero(False)
+        Me.otCodigo.Focus()
+
         '---------------------PUBLICIDAD----------------------------
         REM Call Conectar_DBPub()
         '-----------------------PROMOS------------------------------
@@ -1244,14 +1246,16 @@ Solve_error:
         Else
             Me.oLTitulo.ForeColor = Color.Black
         End If
-
+        If Me.otCodigo.Focused = False Then
+            Me.otCodigo.Focus()
+        End If
         Application.DoEvents()
     End Sub
 
     Private Sub otCodigo_TextChanged(sender As Object, e As EventArgs) Handles otCodigo.TextChanged
         REM On Error GoTo Solve_error
         Dim sValue As String = Me.otCodigo.Text.Trim().Replace("-", "")
-        igLen = sValue.Trim.Length
+        igLen = Trim(sValue).Length
 
 
         If gbServ_Mode = True Then
