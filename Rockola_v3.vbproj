@@ -111,6 +111,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Crypto.vb" />
+    <Compile Include="Video_Form.Designer.vb">
+      <DependentUpon>Video_Form.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Video_Form.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="IniFileVb.vb" />
     <Compile Include="Main.vb">
       <SubType>Form</SubType>
@@ -141,6 +147,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Video_Form.resx">
+      <DependentUpon>Video_Form.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.vb</DependentUpon>
     </EmbeddedResource>
@@ -257,9 +266,6 @@
     <None Include="afwd.gif" />
     <None Include="no_images.png" />
     <Content Include="Object Desktop 2000 Audio CD.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

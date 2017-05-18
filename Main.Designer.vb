@@ -24,13 +24,12 @@ Partial Class FMain
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FMain))
-        Me.oMediaPlayer2 = New AxWMPLib.AxWindowsMediaPlayer()
+        Me.MediaPlayer2 = New AxWMPLib.AxWindowsMediaPlayer()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.oTime_Mensajes = New System.Windows.Forms.Timer(Me.components)
         Me.olMessage = New System.Windows.Forms.Label()
         Me.oLTitulo = New System.Windows.Forms.Label()
         Me.oTM_Box = New System.Windows.Forms.Timer(Me.components)
-        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.oGrpBox_Dis = New System.Windows.Forms.GroupBox()
         Me.oDisc_LabelA12 = New System.Windows.Forms.Label()
         Me.oDisc_LabelB12 = New System.Windows.Forms.Label()
@@ -186,7 +185,23 @@ Partial Class FMain
         Me.olT_Mant = New System.Windows.Forms.Label()
         Me.Timer3 = New System.Windows.Forms.Timer(Me.components)
         Me.Image2 = New System.Windows.Forms.PictureBox()
-        CType(Me.oMediaPlayer2, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TBack4 = New System.Windows.Forms.GroupBox()
+        Me.oLst_A_Tocar = New System.Windows.Forms.ListBox()
+        Me.oLst_Popular = New System.Windows.Forms.ListBox()
+        Me.oLst_Temas_Pub = New System.Windows.Forms.ListBox()
+        Me.oImg_Logo1 = New System.Windows.Forms.PictureBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.oLDuracion = New System.Windows.Forms.Label()
+        Me.olAct_Pos = New System.Windows.Forms.Label()
+        Me.otCargador_Music = New System.Windows.Forms.Timer(Me.components)
+        Me.oLst_Temas_Prom = New System.Windows.Forms.ListBox()
+        Me.otTema_Act = New System.Windows.Forms.MaskedTextBox()
+        Me.oImg_c_Video = New System.Windows.Forms.PictureBox()
+        Me.MediaPlayer1 = New AxWMPLib.AxWindowsMediaPlayer()
+        Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
+        Me.oTimer_Srv = New System.Windows.Forms.Timer(Me.components)
+        CType(Me.MediaPlayer2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.oGrpBox_Dis.SuspendLayout()
         CType(Me.Disk_New12, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Disk_New11, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -246,16 +261,19 @@ Partial Class FMain
         CType(Me.Img_PagPrev, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.oInd_VideoSW, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Image2, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.oImg_Logo1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.oImg_c_Video, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.MediaPlayer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'oMediaPlayer2
+        'MediaPlayer2
         '
-        Me.oMediaPlayer2.Enabled = True
-        Me.oMediaPlayer2.Location = New System.Drawing.Point(31, 160)
-        Me.oMediaPlayer2.Name = "oMediaPlayer2"
-        Me.oMediaPlayer2.OcxState = CType(resources.GetObject("oMediaPlayer2.OcxState"), System.Windows.Forms.AxHost.State)
-        Me.oMediaPlayer2.Size = New System.Drawing.Size(343, 277)
-        Me.oMediaPlayer2.TabIndex = 1
+        Me.MediaPlayer2.Enabled = True
+        Me.MediaPlayer2.Location = New System.Drawing.Point(31, 160)
+        Me.MediaPlayer2.Name = "MediaPlayer2"
+        Me.MediaPlayer2.OcxState = CType(resources.GetObject("MediaPlayer2.OcxState"), System.Windows.Forms.AxHost.State)
+        Me.MediaPlayer2.Size = New System.Drawing.Size(343, 277)
+        Me.MediaPlayer2.TabIndex = 1
         '
         'Button1
         '
@@ -272,16 +290,17 @@ Partial Class FMain
         '
         'olMessage
         '
-        Me.olMessage.BackColor = System.Drawing.Color.Transparent
+        Me.olMessage.BackColor = System.Drawing.Color.White
         Me.olMessage.Cursor = System.Windows.Forms.Cursors.Default
         Me.olMessage.Font = New System.Drawing.Font("Palatino Linotype", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.olMessage.ForeColor = System.Drawing.Color.Yellow
-        Me.olMessage.Location = New System.Drawing.Point(418, 88)
+        Me.olMessage.ForeColor = System.Drawing.Color.Red
+        Me.olMessage.Location = New System.Drawing.Point(373, 84)
         Me.olMessage.Name = "olMessage"
         Me.olMessage.Size = New System.Drawing.Size(578, 36)
         Me.olMessage.TabIndex = 3
         Me.olMessage.Text = "No hay mensajes:..."
         Me.olMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.olMessage.Visible = False
         '
         'oLTitulo
         '
@@ -295,12 +314,8 @@ Partial Class FMain
         Me.oLTitulo.Text = "No hay mensajes:..."
         Me.oLTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'ImageList1
+        'oTM_Box
         '
-        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
-        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
-        Me.ImageList1.Images.SetKeyName(0, "New.gif")
-        Me.ImageList1.Images.SetKeyName(1, "icn_video_pk.gif")
         '
         'oGrpBox_Dis
         '
@@ -1324,6 +1339,7 @@ Partial Class FMain
         Me.Disc_Img1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Img1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img1.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.Disc_Img1.ImageLocation = ""
         Me.Disc_Img1.InitialImage = Nothing
         Me.Disc_Img1.Location = New System.Drawing.Point(6, 31)
         Me.Disc_Img1.Name = "Disc_Img1"
@@ -1971,9 +1987,9 @@ Partial Class FMain
         Me.olTimer2.ForeColor = System.Drawing.Color.Black
         Me.olTimer2.Location = New System.Drawing.Point(139, 61)
         Me.olTimer2.Name = "olTimer2"
-        Me.olTimer2.Size = New System.Drawing.Size(29, 13)
+        Me.olTimer2.Size = New System.Drawing.Size(40, 13)
         Me.olTimer2.TabIndex = 19
-        Me.olTimer2.Text = "00"
+        Me.olTimer2.Text = "000"
         Me.olTimer2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label5
@@ -1995,11 +2011,11 @@ Partial Class FMain
         Me.olTimer1.BackColor = System.Drawing.Color.Transparent
         Me.olTimer1.Font = New System.Drawing.Font("Digital dream Fat", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.olTimer1.ForeColor = System.Drawing.Color.Black
-        Me.olTimer1.Location = New System.Drawing.Point(25, 61)
+        Me.olTimer1.Location = New System.Drawing.Point(10, 61)
         Me.olTimer1.Name = "olTimer1"
-        Me.olTimer1.Size = New System.Drawing.Size(29, 13)
+        Me.olTimer1.Size = New System.Drawing.Size(40, 13)
         Me.olTimer1.TabIndex = 17
-        Me.olTimer1.Text = "00"
+        Me.olTimer1.Text = "000"
         Me.olTimer1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'otCodigo
@@ -2008,7 +2024,7 @@ Partial Class FMain
         Me.otCodigo.Font = New System.Drawing.Font("Digital dream Fat Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.otCodigo.ForeColor = System.Drawing.Color.Yellow
         Me.otCodigo.Location = New System.Drawing.Point(29, 26)
-        Me.otCodigo.Mask = "99-99-99"
+        Me.otCodigo.Mask = "00-00-00"
         Me.otCodigo.Name = "otCodigo"
         Me.otCodigo.Size = New System.Drawing.Size(138, 32)
         Me.otCodigo.TabIndex = 16
@@ -2168,10 +2184,11 @@ Partial Class FMain
         '
         'oLst_Temas_Video
         '
+        Me.oLst_Temas_Video.Enabled = False
         Me.oLst_Temas_Video.FormattingEnabled = True
-        Me.oLst_Temas_Video.Location = New System.Drawing.Point(863, 9)
+        Me.oLst_Temas_Video.Location = New System.Drawing.Point(374, 267)
         Me.oLst_Temas_Video.Name = "oLst_Temas_Video"
-        Me.oLst_Temas_Video.Size = New System.Drawing.Size(53, 43)
+        Me.oLst_Temas_Video.Size = New System.Drawing.Size(204, 30)
         Me.oLst_Temas_Video.TabIndex = 28
         Me.oLst_Temas_Video.Visible = False
         '
@@ -2206,9 +2223,9 @@ Partial Class FMain
         Me.olTema_Act.Cursor = System.Windows.Forms.Cursors.Default
         Me.olTema_Act.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.olTema_Act.ForeColor = System.Drawing.Color.Blue
-        Me.olTema_Act.Location = New System.Drawing.Point(34, 96)
+        Me.olTema_Act.Location = New System.Drawing.Point(81, 9)
         Me.olTema_Act.Name = "olTema_Act"
-        Me.olTema_Act.Size = New System.Drawing.Size(340, 28)
+        Me.olTema_Act.Size = New System.Drawing.Size(235, 28)
         Me.olTema_Act.TabIndex = 30
         Me.olTema_Act.Text = "TOCANDO TEMA:.."
         Me.olTema_Act.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -2291,12 +2308,180 @@ Partial Class FMain
         Me.Image2.TabIndex = 37
         Me.Image2.TabStop = False
         '
+        'TBack4
+        '
+        Me.TBack4.BackColor = System.Drawing.Color.Transparent
+        Me.TBack4.ForeColor = System.Drawing.Color.Transparent
+        Me.TBack4.Location = New System.Drawing.Point(396, 97)
+        Me.TBack4.Name = "TBack4"
+        Me.TBack4.Size = New System.Drawing.Size(53, 55)
+        Me.TBack4.TabIndex = 38
+        Me.TBack4.TabStop = False
+        Me.TBack4.Visible = False
+        '
+        'oLst_A_Tocar
+        '
+        Me.oLst_A_Tocar.Enabled = False
+        Me.oLst_A_Tocar.FormattingEnabled = True
+        Me.oLst_A_Tocar.Location = New System.Drawing.Point(374, 224)
+        Me.oLst_A_Tocar.Name = "oLst_A_Tocar"
+        Me.oLst_A_Tocar.Size = New System.Drawing.Size(204, 30)
+        Me.oLst_A_Tocar.TabIndex = 39
+        Me.oLst_A_Tocar.Visible = False
+        '
+        'oLst_Popular
+        '
+        Me.oLst_Popular.Enabled = False
+        Me.oLst_Popular.FormattingEnabled = True
+        Me.oLst_Popular.Location = New System.Drawing.Point(374, 310)
+        Me.oLst_Popular.MultiColumn = True
+        Me.oLst_Popular.Name = "oLst_Popular"
+        Me.oLst_Popular.Size = New System.Drawing.Size(204, 30)
+        Me.oLst_Popular.TabIndex = 40
+        Me.oLst_Popular.Visible = False
+        '
+        'oLst_Temas_Pub
+        '
+        Me.oLst_Temas_Pub.Enabled = False
+        Me.oLst_Temas_Pub.FormattingEnabled = True
+        Me.oLst_Temas_Pub.Location = New System.Drawing.Point(374, 353)
+        Me.oLst_Temas_Pub.Name = "oLst_Temas_Pub"
+        Me.oLst_Temas_Pub.Size = New System.Drawing.Size(204, 30)
+        Me.oLst_Temas_Pub.TabIndex = 41
+        Me.oLst_Temas_Pub.Visible = False
+        '
+        'oImg_Logo1
+        '
+        Me.oImg_Logo1.BackColor = System.Drawing.Color.Transparent
+        Me.oImg_Logo1.Location = New System.Drawing.Point(524, 259)
+        Me.oImg_Logo1.Name = "oImg_Logo1"
+        Me.oImg_Logo1.Size = New System.Drawing.Size(343, 277)
+        Me.oImg_Logo1.TabIndex = 42
+        Me.oImg_Logo1.TabStop = False
+        Me.oImg_Logo1.Visible = False
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.BackColor = System.Drawing.Color.Transparent
+        Me.Label4.Location = New System.Drawing.Point(3, 91)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(53, 13)
+        Me.Label4.TabIndex = 43
+        Me.Label4.Text = "Duración:"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.BackColor = System.Drawing.Color.Transparent
+        Me.Label6.Location = New System.Drawing.Point(6, 109)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(50, 13)
+        Me.Label6.TabIndex = 44
+        Me.Label6.Text = "Posición:"
+        '
+        'oLDuracion
+        '
+        Me.oLDuracion.AutoSize = True
+        Me.oLDuracion.BackColor = System.Drawing.Color.Transparent
+        Me.oLDuracion.Location = New System.Drawing.Point(57, 91)
+        Me.oLDuracion.Name = "oLDuracion"
+        Me.oLDuracion.Size = New System.Drawing.Size(34, 13)
+        Me.oLDuracion.TabIndex = 45
+        Me.oLDuracion.Text = "00:00"
+        '
+        'olAct_Pos
+        '
+        Me.olAct_Pos.AutoSize = True
+        Me.olAct_Pos.BackColor = System.Drawing.Color.Transparent
+        Me.olAct_Pos.Location = New System.Drawing.Point(57, 109)
+        Me.olAct_Pos.Name = "olAct_Pos"
+        Me.olAct_Pos.Size = New System.Drawing.Size(34, 13)
+        Me.olAct_Pos.TabIndex = 46
+        Me.olAct_Pos.Text = "00:00"
+        '
+        'otCargador_Music
+        '
+        Me.otCargador_Music.Interval = 1200
+        '
+        'oLst_Temas_Prom
+        '
+        Me.oLst_Temas_Prom.Enabled = False
+        Me.oLst_Temas_Prom.FormattingEnabled = True
+        Me.oLst_Temas_Prom.Location = New System.Drawing.Point(374, 396)
+        Me.oLst_Temas_Prom.Name = "oLst_Temas_Prom"
+        Me.oLst_Temas_Prom.Size = New System.Drawing.Size(204, 30)
+        Me.oLst_Temas_Prom.TabIndex = 48
+        Me.oLst_Temas_Prom.Visible = False
+        '
+        'otTema_Act
+        '
+        Me.otTema_Act.BackColor = System.Drawing.Color.OrangeRed
+        Me.otTema_Act.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.otTema_Act.CausesValidation = False
+        Me.otTema_Act.Cursor = System.Windows.Forms.Cursors.Default
+        Me.otTema_Act.Enabled = False
+        Me.otTema_Act.Font = New System.Drawing.Font("Digital dream Fat Narrow", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.otTema_Act.ForeColor = System.Drawing.Color.Yellow
+        Me.otTema_Act.Location = New System.Drawing.Point(102, 40)
+        Me.otTema_Act.Mask = "##-##-##"
+        Me.otTema_Act.Name = "otTema_Act"
+        Me.otTema_Act.PromptChar = Global.Microsoft.VisualBasic.ChrW(45)
+        Me.otTema_Act.Size = New System.Drawing.Size(138, 32)
+        Me.otTema_Act.TabIndex = 52
+        '
+        'oImg_c_Video
+        '
+        Me.oImg_c_Video.BackColor = System.Drawing.Color.Transparent
+        Me.oImg_c_Video.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.oImg_c_Video.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
+        Me.oImg_c_Video.InitialImage = Nothing
+        Me.oImg_c_Video.Location = New System.Drawing.Point(246, 44)
+        Me.oImg_c_Video.Name = "oImg_c_Video"
+        Me.oImg_c_Video.Size = New System.Drawing.Size(32, 28)
+        Me.oImg_c_Video.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.oImg_c_Video.TabIndex = 53
+        Me.oImg_c_Video.TabStop = False
+        Me.oImg_c_Video.Visible = False
+        '
+        'MediaPlayer1
+        '
+        Me.MediaPlayer1.Enabled = True
+        Me.MediaPlayer1.Location = New System.Drawing.Point(396, 158)
+        Me.MediaPlayer1.Name = "MediaPlayer1"
+        Me.MediaPlayer1.OcxState = CType(resources.GetObject("MediaPlayer1.OcxState"), System.Windows.Forms.AxHost.State)
+        Me.MediaPlayer1.Size = New System.Drawing.Size(53, 55)
+        Me.MediaPlayer1.TabIndex = 54
+        Me.MediaPlayer1.Visible = False
+        '
+        'Timer2
+        '
+        Me.Timer2.Enabled = True
+        Me.Timer2.Interval = 1000
+        '
+        'oTimer_Srv
+        '
+        Me.oTimer_Srv.Interval = 20000
+        '
         'FMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackgroundImage = CType(resources.GetObject("$this.BackgroundImage"), System.Drawing.Image)
         Me.ClientSize = New System.Drawing.Size(1008, 729)
+        Me.Controls.Add(Me.MediaPlayer1)
+        Me.Controls.Add(Me.oImg_c_Video)
+        Me.Controls.Add(Me.otTema_Act)
+        Me.Controls.Add(Me.oLst_Temas_Prom)
+        Me.Controls.Add(Me.olAct_Pos)
+        Me.Controls.Add(Me.oLDuracion)
+        Me.Controls.Add(Me.Label6)
+        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.oImg_Logo1)
+        Me.Controls.Add(Me.oLst_Temas_Pub)
+        Me.Controls.Add(Me.oLst_Popular)
+        Me.Controls.Add(Me.oLst_A_Tocar)
+        Me.Controls.Add(Me.TBack4)
         Me.Controls.Add(Me.Image2)
         Me.Controls.Add(Me.olT_Mant)
         Me.Controls.Add(Me.oService_Info)
@@ -2324,13 +2509,13 @@ Partial Class FMain
         Me.Controls.Add(Me.oLTitulo)
         Me.Controls.Add(Me.olMessage)
         Me.Controls.Add(Me.Button1)
-        Me.Controls.Add(Me.oMediaPlayer2)
+        Me.Controls.Add(Me.MediaPlayer2)
         Me.Controls.Add(Me.oSetFocus_Codigo)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "FMain"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Form1"
-        CType(Me.oMediaPlayer2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.MediaPlayer2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.oGrpBox_Dis.ResumeLayout(False)
         Me.oGrpBox_Dis.PerformLayout()
         CType(Me.Disk_New12, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2392,17 +2577,19 @@ Partial Class FMain
         CType(Me.Img_PagPrev, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.oInd_VideoSW, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Image2, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.oImg_Logo1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.oImg_c_Video, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.MediaPlayer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents oMediaPlayer2 As AxWMPLib.AxWindowsMediaPlayer
+    Friend WithEvents MediaPlayer2 As AxWMPLib.AxWindowsMediaPlayer
     Friend WithEvents Button1 As Button
     Friend WithEvents oTime_Mensajes As Timer
     Friend WithEvents olMessage As Label
     Friend WithEvents oLTitulo As Label
     Friend WithEvents oTM_Box As Timer
-    Friend WithEvents ImageList1 As ImageList
     Friend WithEvents oGrpBox_Dis As GroupBox
     Friend WithEvents Disc_Img3 As PictureBox
     Friend WithEvents Disc_Img2 As PictureBox
@@ -2558,4 +2745,20 @@ Partial Class FMain
     Friend WithEvents olT_Mant As Label
     Friend WithEvents Timer3 As Timer
     Friend WithEvents Image2 As PictureBox
+    Friend WithEvents TBack4 As GroupBox
+    Friend WithEvents oLst_A_Tocar As ListBox
+    Friend WithEvents oLst_Popular As ListBox
+    Friend WithEvents oLst_Temas_Pub As ListBox
+    Friend WithEvents oImg_Logo1 As PictureBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents Label6 As Label
+    Friend WithEvents oLDuracion As Label
+    Friend WithEvents olAct_Pos As Label
+    Friend WithEvents otCargador_Music As Timer
+    Friend WithEvents oLst_Temas_Prom As ListBox
+    Friend WithEvents otTema_Act As MaskedTextBox
+    Friend WithEvents oImg_c_Video As PictureBox
+    Friend WithEvents MediaPlayer1 As AxWMPLib.AxWindowsMediaPlayer
+    Friend WithEvents Timer2 As Timer
+    Friend WithEvents oTimer_Srv As Timer
 End Class

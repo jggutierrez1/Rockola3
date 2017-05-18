@@ -27,7 +27,7 @@ Module Module1
 
     Public oIni As New IniFile
     Private bini_started As Boolean = False
-    Private cini_path As String = ""
+    Public cini_path As String = ""
 
     Public igFlg_TCR As Integer
     Public igShowPass As Integer
@@ -97,9 +97,15 @@ Module Module1
     Public sgFle_Fon As String
     Public igLim_Cred As Integer    'Limite de creditos
     Public igInd_Pub As Integer     'índice de publicidad
+
     Public igGen_Sel As String
     Public igDis_Sel As String
     Public igCan_Sel As String
+
+    Public sgGen_Sel_Id As String
+    Public sgDis_Sel_Id As String
+    Public sgCan_Sel_Id As String
+
     Public igCnt_CR As Integer      'Contador de créditos.
     Public igCnt_CRP As Integer     'Contador de créditos de prueba
     Public igCnt_CRG As Long        'Contador de Créditos general.
@@ -129,23 +135,20 @@ Module Module1
     Public rtn As Long
     Public igScr_Alone As Integer
 
-    Public oDt_File01 As SQLiteDataReader
-    Public oDt_File02 As SQLiteDataReader
-    Public oDt_File03 As SQLiteDataReader
+    Public bgLoad_Promo As Boolean = False
+    Public bgLoad_pub As Boolean = False
 
-    Public dtFile01 As DataTable = New DataTable()
-    Public dtFile02 As DataTable = New DataTable()
-    Public dtFile03 As DataTable = New DataTable()
+    Public oDirPub1 As IO.DirectoryInfo
+    Public oFlsPub1 As IO.FileInfo()
+    Public oDirPub2 As IO.DirectoryInfo
+    Public oFlsPub2 As IO.FileInfo()
 
-    Dim daFile01 As SQLiteDataAdapter
-    Dim daFile02 As SQLiteDataAdapter
-    Dim daFile03 As SQLiteDataAdapter
-    Dim daPromos As SQLiteDataAdapter
+    Public cFileSqlite As String = Application.StartupPath() & "\FilesV3.db;FailIfMissing=False;"
+    Public cStrConnect As String = "DataSource=" & cFileSqlite
+    Public oConnSqLite As New SQLiteConnection(cStrConnect)
+    Public oCmmSqLite As SQLiteCommand
+    Public oTableSqLite As SQLiteDataReader
 
-    Dim dsFile01 As New DataSet
-    Dim dsFile02 As New DataSet
-    Dim dsFile03 As New DataSet
-    Dim dsPromos As New DataSet
 
     'Declare Function GetWindowsDirectory Lib "kernel32" Alias "GetWindowsDirectoryA" (ByVal lpBuffer As String, _
     'ByVal nSize As Long) As Long
@@ -594,31 +597,7 @@ Module Module1
     Public Sub ObPlayer_Ocupado(oPlayer As Object)
     End Sub
 
-    Public Sub Muestra_Tema_Det()
-    End Sub
-
-    Public Sub Remove_Temes()
-    End Sub
-
     Public Sub Sincronoze_Media()
-    End Sub
-
-    Public Sub Refresh_Creditos(oForm As Form)
-        If igKeep_Cred = 1 Then
-            FMain.olCreditos.Text = "CRÉDITOS GRATIS"
-            FMain.oTimer_Blink.Enabled = False
-            FMain.olCred_Msg.Visible = False
-            Exit Sub
-        End If
-        If igCnt_CR > 0 Then
-            FMain.oTimer_Blink.Enabled = False
-            FMain.olCred_Msg.Visible = False
-        Else
-            FMain.oTimer_Blink.Enabled = True
-            FMain.olCred_Msg.Visible = True
-        End If
-        FMain.olCreditos.Text = "CREDITOS (" + Trim(Str(igCnt_CR)) & ")"
-        FMain.olMetros.Text = PADL(igCnt_CRG, 6, "0")
     End Sub
 
     Public Sub ControlError()
@@ -728,6 +707,14 @@ Module Module1
         Shuffle(aList, startIndex, endIndex)
     End Sub
 
+    Function InList(cString As String, olist() As String)
+        If (Array.IndexOf(olist, cString > -1)) Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
     Private Sub Refresh_Paginero(ByVal piPag_No As Integer, ByVal ipPag_Tot As Integer)
         FMain.olPaginas.Text = "Página (" + Trim(Str(piPag_No)) + " de " + Trim(Str(ipPag_Tot)) + ")"
         If piPag_No = 1 And ipPag_Tot = 1 Then
@@ -755,37 +742,7 @@ Module Module1
         End If
     End Sub
 
-    Public Sub Conectar_DBPub()
-        REM Dim arr_Pub() As String = Directory.GetFiles(If(bgSw_Pub = False, sgDir_Pub1, sgDir_Pub2), "*.mp4|*.mpg", SearchOption.TopDirectoryOnly)
-        REM igTot_Pub = arr_Pub.Count
-        REM agArr_Pub = Shuffle(arr_Pub)
-    End Sub
-
-    Public Sub Conectar_DBPro(Optional iClose As Integer = 0)
-        If Not (FMain.oSqLiteConn.State = ConnectionState.Open) Then
-            FMain.oSqLiteConn.Close()
-            FMain.oSqLiteConn.DataSource = Application.StartupPath() & "\Filesv3.tab"
-            FMain.oSqLiteConn.Open()
-        End If
-
-        Dim oSqLitComm As SQLiteCommand = FMain.oSqLiteConn.CreateCommand()
-        Dim sSql As String = "SELECT " &
-        "file01.ID_GEN, file01.ID_ORD AS ID_ORD1, " &
-        "file02.ID_DIS ,file02.ID_ORD AS ID_ORD2, " &
-        "file02.FL_IMG, file03.*  " &
-        "FROM file01 " &
-        "LEFT JOIN file02 ON file01.ID_GEN=file02.ID_GEN" &
-        "LEFT JOIN file03 ON file03.ID_DIS=file02.ID_DIS " &
-        "WHERE file03.FL_PRC = 1 "
-
-        oSqLitComm.CommandText = sSql
-
-        daPromos = Nothing
-        daPromos = New SQLiteDataAdapter(oSqLitComm)
-        daPromos.Fill(dsPromos)
-    End Sub
-
-    Public Function Shuffle(ByVal items() As String) As Array
+    Public Function Shuffle_Return(ByVal items() As String) As Array
         Dim max_index As Integer = items.Length - 1
         Dim rnd As New Random(DateTime.Now.Millisecond)
         For i As Integer = 0 To max_index
@@ -800,96 +757,133 @@ Module Module1
         Return items
     End Function
 
+    Sub Shuffle_ListBox(ByRef pListbox As System.Windows.Forms.ListBox)
+        Dim Random As New System.Random
+        pListbox.BeginUpdate()
+        Dim ArrayList As New System.Collections.ArrayList(pListbox.Items)
+        pListbox.Items.Clear()
+        While ArrayList.Count > 0
+            Dim Index As System.Int32 = Random.Next(0, ArrayList.Count)
+            pListbox.Items.Add(ArrayList(Index))
+            ArrayList.RemoveAt(Index)
+        End While
+        pListbox.EndUpdate()
+    End Sub
+
     Sub Max_Pag_Gen()
-        '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------
         Dim pFileName = Application.StartupPath() & "\FilesV3.db;FailIfMissing=False;"
         Dim str As String = "DataSource=" & pFileName
-        Dim con As New SQLiteConnection(str)
-        Dim sql As String = "SELECT MAX(page) as Max_PageG FROM file01 "
+        Dim con As SQLiteConnection
+        Dim cmm As SQLiteCommand
         Dim dar As SQLiteDataReader
+        Dim sql As String
+        Try
+            '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------
+            con = New SQLiteConnection(str)
 
-        If Not (con.State = ConnectionState.Open) Then
-            con.Open()
-        End If
+            If Not (con.State = ConnectionState.Open) Then
+                con.Open()
+            End If
 
-        Dim cmm As New SQLiteCommand(sql, con)
-        dar = cmm.ExecuteReader()
-        '----------------------------------------------------------------------------------
-        If dar.HasRows = True Then
-            dar.Read()
-            igMax_RgG = Val(dar.Item("Max_PageG").ToString())
-        Else
-            igMax_RgG = 0
-        End If
-        '----------------------------------------------------------------------------------
+            sql = "SELECT MAX(page) as Max_PageG FROM file01 "
+            cmm = New SQLiteCommand(sql, con)
+            dar = cmm.ExecuteReader()
 
-        dar.Close()
-        dar = Nothing
-        con.Close()
-        con = Nothing
-        cmm = Nothing
+            '----------------------------------------------------------------------------------
+            If dar.HasRows = True Then
+                dar.Read()
+                igMax_RgG = Val(dar.Item("Max_PageG").ToString())
+            Else
+                igMax_RgG = 0
+            End If
+            '----------------------------------------------------------------------------------
+
+        Catch ex As SQLiteException
+            Console.WriteLine("Error: " & ex.ToString())
+        Finally
+            dar.Close()
+            dar = Nothing
+            con.Close()
+            con = Nothing
+            cmm = Nothing
+        End Try
     End Sub
 
     Sub Max_Pag_Dis(ByVal pCod_Gen As String)
-
         '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------
         Dim pFileName = Application.StartupPath() & "\FilesV3.db;FailIfMissing=False;"
         Dim str As String = "DataSource=" & pFileName
-        Dim con As New SQLiteConnection(str)
-        Dim sql As String = "SELECT MAX(page) as Max_PageD FROM file02 WHERE id_gen=" & pCod_Gen & ""
+        Dim con As SQLiteConnection
+        Dim cmm As SQLiteCommand
         Dim dar As SQLiteDataReader
+        Dim sql As String
+        Try
+            con = New SQLiteConnection(str)
 
-        If Not (con.State = ConnectionState.Open) Then
-            con.Open()
-        End If
+            If Not (con.State = ConnectionState.Open) Then
+                con.Open()
+            End If
 
-        Dim cmm As New SQLiteCommand(sql, con)
-        dar = cmm.ExecuteReader()
-        '----------------------------------------------------------------------------------
-        If dar.HasRows = True Then
-            dar.Read()
-            igMax_RgD = Val(dar.Item("Max_PageD").ToString())
-        Else
-            igMax_RgD = 0
-        End If
-        '----------------------------------------------------------------------------------
+            sql = "SELECT MAX(page) as Max_PageD FROM file02 WHERE id_gen=" & pCod_Gen & ""
+            cmm = New SQLiteCommand(sql, con)
+            dar = cmm.ExecuteReader()
+            '----------------------------------------------------------------------------------
+            If dar.HasRows = True Then
+                dar.Read()
+                igMax_RgD = Val(dar.Item("Max_PageD").ToString())
+            Else
+                igMax_RgD = 0
+            End If
+            '----------------------------------------------------------------------------------
 
-        dar.Close()
-        dar = Nothing
-        con.Close()
-        con = Nothing
-        cmm = Nothing
+        Catch ex As SQLiteException
+            Console.WriteLine("Error: " & ex.ToString())
+        Finally
+            dar.Close()
+            dar = Nothing
+            con.Close()
+            con = Nothing
+            cmm = Nothing
+        End Try
     End Sub
 
     Sub Max_Pag_Canc(ByVal pCod_Disc As String)
-
-        '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------
         Dim pFileName = Application.StartupPath() & "\FilesV3.db;FailIfMissing=False;"
         Dim str As String = "DataSource=" & pFileName
-        Dim con As New SQLiteConnection(str)
-        Dim sql As String = "SELECT MAX(page) AS Max_PageC FROM file03 WHERE id_dis=" & pCod_Disc & ""
+        Dim con As SQLiteConnection
+        Dim cmm As SQLiteCommand
         Dim dar As SQLiteDataReader
+        Dim sql As String
+        Try
 
-        If Not (con.State = ConnectionState.Open) Then
-            con.Open()
-        End If
+            '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------
+            con = New SQLiteConnection(str)
 
-        Dim cmm As New SQLiteCommand(sql, con)
-        dar = cmm.ExecuteReader()
-        '----------------------------------------------------------------------------------
-        If dar.HasRows = True Then
-            dar.Read()
-            igMax_RgC = Val(dar.Item("Max_PageC").ToString())
-        Else
-            igMax_RgC = 0
-        End If
-        '----------------------------------------------------------------------------------
+            If Not (con.State = ConnectionState.Open) Then
+                con.Open()
+            End If
 
-        dar.Close()
-        dar = Nothing
-        con.Close()
-        con = Nothing
-        cmm = Nothing
+            sql = "SELECT MAX(page) AS Max_PageC FROM file03 WHERE id_dis=" & pCod_Disc & ""
+            cmm = New SQLiteCommand(sql, con)
+            dar = cmm.ExecuteReader()
+            '----------------------------------------------------------------------------------
+            If dar.HasRows = True Then
+                dar.Read()
+                igMax_RgC = Val(dar.Item("Max_PageC").ToString())
+            Else
+                igMax_RgC = 0
+            End If
+            '----------------------------------------------------------------------------------
+        Catch ex As SQLiteException
+            Console.WriteLine("Error: " & ex.ToString())
+        Finally
+
+            dar.Close()
+            dar = Nothing
+            con.Close()
+            con = Nothing
+            cmm = Nothing
+        End Try
     End Sub
 
 

@@ -27,4 +27,4 @@ C:\Shared\Desarrollo\Dev_Flam\Rockola3\bin\Debug\Devart.Data.SQLite.xml
 C:\Shared\Desarrollo\Dev_Flam\Rockola3\obj\Debug\Rockola_v3.TrustInfo.xml
 C:\Shared\Desarrollo\Dev_Flam\Rockola3\obj\Debug\Rockola_v3.exe.manifest
 C:\Shared\Desarrollo\Dev_Flam\Rockola3\obj\Debug\Rockola_v3.application
-C:\Shared\Desarrollo\Dev_Flam\Rockola3\obj\Debug\Rockola_v3.vbprojResolveAssemblyReference.cache
+C:\Shared\Desarrollo\Dev_Flam\Rockola3\obj\Debug\Rockola_v3.Video_Form.resources

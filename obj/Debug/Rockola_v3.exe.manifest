@@ -50,7 +50,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>oxbKjl4SJ7Ra8tzGcJdHk5qiJZs=</dsig:DigestValue>
+        <dsig:DigestValue>8Iz0y/NMMP5sK7Ba57psjMEAVy0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -62,7 +62,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>uc5RI+KIYqzOen98GXMgAXKibKs=</dsig:DigestValue>
+        <dsig:DigestValue>vBs1gCUJUCQcGUMjQ/2rEdrGoqc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -98,7 +98,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>ZbezOMWQfiP1AVHsLayv/B5/myw=</dsig:DigestValue>
+        <dsig:DigestValue>laTIag+lgkn/KrxA9HoRpY+h4H8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -110,19 +110,19 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>aSvGTGt95XlGZsRgjvljW5Ca3hE=</dsig:DigestValue>
+        <dsig:DigestValue>XoOtP6bKV19AWbV7OwIuyqRWJNs=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Rockola_v3.exe" size="666624">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Rockola_v3.exe" size="690176">
       <assemblyIdentity name="Rockola_v3" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>TUKICW+S8rEo3QVLvK8/MJQPNsE=</dsig:DigestValue>
+        <dsig:DigestValue>EJarBhEY9TzsN/VB6cq5/obCvnc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
