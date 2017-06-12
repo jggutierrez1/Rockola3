@@ -265,7 +265,11 @@
     <None Include="aback.gif" />
     <None Include="afwd.gif" />
     <None Include="no_images.png" />
+    <None Include="left_blue_arrow_f2.gif" />
     <Content Include="Object Desktop 2000 Audio CD.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

@@ -43,18 +43,25 @@ Module Module1
     Public bgPopular As Boolean  'Si esta activado al orden de popular
     Public bgVIP As Boolean      'Si esta activado al orden de VIP
     Public igKeyAscii As Integer 'Almacena el còdigo de la ùltima letra presionada
+
     Public igMax_Dis As Integer = 12 'Máxima cantidad de registros (DB) físicos en Discos
     Public igMax_Gen As Integer = 13 'Máxima cantidad de registros (DB) físicos en Géneros
+
     Public igMax_Can As Integer = 13 'Máxima cantidad de registros (DB) físicos en Géneros
     Public igMax_RgG As Integer  'Máximo de registros por pantalla de Género
+
     Public igMax_RgD As Integer  'Máximo de registros por pantalla de Discos
     Public igMax_RgC As Integer  'Máximo de registros por pantalla de Discos
+
     Public igTot_PgG As Integer  'Total de paginas en la consulta (Generos)
     Public igAct_PgG As Integer  'Página actual (Generos)
+
     Public igTot_PgD As Integer  'Total de paginas en la consulta (Discos)
     Public igAct_PgD As Integer  'Página actual (Discos)
+
     Public igTot_PgC As Integer  'Total de paginas en la consulta (Discos)
     Public igAct_PgC As Integer  'Página actual (Cansión)
+
     Public sgIdx_Prm As Integer  'Máximo de temas para insertar un promo
     Public igFlg_SavedCR As Integer
     Public igStartPlayMusic As Integer
@@ -98,9 +105,9 @@ Module Module1
     Public igLim_Cred As Integer    'Limite de creditos
     Public igInd_Pub As Integer     'índice de publicidad
 
-    Public igGen_Sel As String
-    Public igDis_Sel As String
-    Public igCan_Sel As String
+    Public sgGen_Sel_Ord As String
+    Public sgDis_Sel_Ord As String
+    Public sgCan_Sel_Ord As String
 
     Public sgGen_Sel_Id As String
     Public sgDis_Sel_Id As String
@@ -148,6 +155,8 @@ Module Module1
     Public oConnSqLite As New SQLiteConnection(cStrConnect)
     Public oCmmSqLite As SQLiteCommand
     Public oTableSqLite As SQLiteDataReader
+
+    Public iNivel_Pag As Integer = 1
 
 
     'Declare Function GetWindowsDirectory Lib "kernel32" Alias "GetWindowsDirectoryA" (ByVal lpBuffer As String, _
@@ -299,7 +308,7 @@ Module Module1
     Public Sub Init_Ini()
         Dim sRuta As String = ""
         sRuta = Application.StartupPath()
-        If (My.Computer.FileSystem.FileExists(sRuta & "\PathV3.ini") = True) Then
+        If (IO.File.Exists(sRuta & "\PathV3.ini") = True) Then
             cini_path = sRuta & "\PathV3.ini"
             oIni.Load(cini_path)
             bini_started = True
@@ -716,29 +725,24 @@ Module Module1
     End Function
 
     Private Sub Refresh_Paginero(ByVal piPag_No As Integer, ByVal ipPag_Tot As Integer)
-        FMain.olPaginas.Text = "Página (" + Trim(Str(piPag_No)) + " de " + Trim(Str(ipPag_Tot)) + ")"
         If piPag_No = 1 And ipPag_Tot = 1 Then
             bgBlinkPag = False
             FMain.Img_PagPrev.Visible = False
             FMain.Img_PagNext.Visible = False
-            FMain.olPaginas2.Visible = False
             'fMain.olPaginas.ForeColor = &HFFFF&
             'fMain.olPaginas2.ForeColor = &HFFFF&
         ElseIf piPag_No = 1 And ipPag_Tot > 1 Then
             bgBlinkPag = True
             FMain.Img_PagPrev.Visible = False
             FMain.Img_PagNext.Visible = True
-            FMain.olPaginas2.Visible = True
         ElseIf piPag_No <> 1 And (ipPag_Tot = piPag_No) Then
             bgBlinkPag = True
             FMain.Img_PagPrev.Visible = True
             FMain.Img_PagNext.Visible = False
-            FMain.olPaginas2.Visible = True
         ElseIf piPag_No > 1 And (ipPag_Tot <> piPag_No) Then
             bgBlinkPag = True
             FMain.Img_PagPrev.Visible = True
             FMain.Img_PagNext.Visible = True
-            FMain.olPaginas2.Visible = True
         End If
     End Sub
 
@@ -757,9 +761,17 @@ Module Module1
         Return items
     End Function
 
-    Sub Shuffle_ListBox(ByRef pListbox As System.Windows.Forms.ListBox)
+    Sub Shuffle_ListBox(ByRef pListbox As System.Windows.Forms.ListBox, bLetFirst As Boolean)
+        Dim cValue As String = ""
+        If (pListbox.Items.Count > 0) Then
+            cValue = pListbox.Items(0)
+        End If
+
         Dim Random As New System.Random
         pListbox.BeginUpdate()
+        If (bLetFirst = True) Then
+            pListbox.Items.RemoveAt(0)
+        End If
         Dim ArrayList As New System.Collections.ArrayList(pListbox.Items)
         pListbox.Items.Clear()
         While ArrayList.Count > 0
@@ -767,6 +779,9 @@ Module Module1
             pListbox.Items.Add(ArrayList(Index))
             ArrayList.RemoveAt(Index)
         End While
+        If (bLetFirst = True) Then
+            pListbox.Items.Insert(0, cValue)
+        End If
         pListbox.EndUpdate()
     End Sub
 
@@ -785,7 +800,7 @@ Module Module1
                 con.Open()
             End If
 
-            sql = "SELECT MAX(page) as Max_PageG FROM file01 "
+            sql = "SELECT MAX(page) AS Max_PageG FROM file01 "
             cmm = New SQLiteCommand(sql, con)
             dar = cmm.ExecuteReader()
 
@@ -809,7 +824,7 @@ Module Module1
         End Try
     End Sub
 
-    Sub Max_Pag_Dis(ByVal pCod_Gen As String)
+    Sub Max_Pag_Dis(ByVal pId_Cod_Gen As String)
         '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------
         Dim pFileName = Application.StartupPath() & "\FilesV3.db;FailIfMissing=False;"
         Dim str As String = "DataSource=" & pFileName
@@ -824,7 +839,7 @@ Module Module1
                 con.Open()
             End If
 
-            sql = "SELECT MAX(page) as Max_PageD FROM file02 WHERE id_gen=" & pCod_Gen & ""
+            sql = "SELECT MAX(page) as Max_PageD FROM file02 WHERE id_gen=" & pId_Cod_Gen & ""
             cmm = New SQLiteCommand(sql, con)
             dar = cmm.ExecuteReader()
             '----------------------------------------------------------------------------------
@@ -847,7 +862,7 @@ Module Module1
         End Try
     End Sub
 
-    Sub Max_Pag_Canc(ByVal pCod_Disc As String)
+    Sub Max_Pag_Canc(ByVal pId_Cod_Disc As String)
         Dim pFileName = Application.StartupPath() & "\FilesV3.db;FailIfMissing=False;"
         Dim str As String = "DataSource=" & pFileName
         Dim con As SQLiteConnection
@@ -863,7 +878,7 @@ Module Module1
                 con.Open()
             End If
 
-            sql = "SELECT MAX(page) AS Max_PageC FROM file03 WHERE id_dis=" & pCod_Disc & ""
+            sql = "SELECT MAX(page) AS Max_PageC FROM file03 WHERE id_dis=" & pId_Cod_Disc & ""
             cmm = New SQLiteCommand(sql, con)
             dar = cmm.ExecuteReader()
             '----------------------------------------------------------------------------------

@@ -115,14 +115,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Rockola_v3.exe" size="690176">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Rockola_v3.exe" size="697344">
       <assemblyIdentity name="Rockola_v3" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>EJarBhEY9TzsN/VB6cq5/obCvnc=</dsig:DigestValue>
+        <dsig:DigestValue>oJwBgnYWePm5laxd+hRPxKoVKB0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -135,13 +135,13 @@
       <dsig:DigestValue>xzZNXWDq8aOC2Z5m3YICP0kZZZo=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Rockola_v3.exe.config" size="910">
+  <file name="Rockola_v3.exe.config" size="1147">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>VUtmNqM226Nxeb7sB05aOiZ9lfU=</dsig:DigestValue>
+      <dsig:DigestValue>SG1LPteuoDKAriFefuZdbNFM4Zg=</dsig:DigestValue>
     </hash>
   </file>
   <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">

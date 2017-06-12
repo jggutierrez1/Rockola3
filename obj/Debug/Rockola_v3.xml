@@ -52,6 +52,11 @@ Rockola_v3
   Looks up a localized resource of type System.Drawing.Bitmap.
 </summary>
 </member>
+<member name="P:Rockola_v3.My.Resources.Resources.left_blue_arrow_f2">
+<summary>
+  Looks up a localized resource of type System.Drawing.Bitmap.
+</summary>
+</member>
 <member name="P:Rockola_v3.My.Resources.Resources.no_images">
 <summary>
   Looks up a localized resource of type System.Drawing.Bitmap.

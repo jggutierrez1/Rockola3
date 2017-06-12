@@ -3,6 +3,7 @@ Imports System.Management
 Imports System.Management.Instrumentation
 Imports System.Drawing
 Imports Devart.Data.SQLite
+Imports AxWMPLib
 
 Public Class FMain
 
@@ -12,9 +13,9 @@ Public Class FMain
     Private oGrpGene_y As Integer = 116
 
     Private oGrpDisc_With As Integer = 622
-    Private oGrpDisc_Height As Integer = 601
+    Private oGrpDisc_Height As Integer = 613
     Private oGrpDisc_x As Integer = 380
-    Private oGrpDisc_y As Integer = 127
+    Private oGrpDisc_y As Integer = 115
 
     Private oGrpCanc_With As Integer = 590
     Private oGrpCanc_Height As Integer = 535
@@ -191,9 +192,12 @@ Public Class FMain
         oLGenero11.Click, oLGenero12.Click, oLGenero13.Click
 
         If Not (sender.tag = 0) Then
-            igGen_Sel = sender.tag
+            sgGen_Sel_Id = sender.tag
+            sgGen_Sel_Ord = ExecSql_Result("SELECT id_ord FROM file01 WHERE id_gen='" & sgGen_Sel_Id & "'", "id_ord")
+
+            Me.Busca_Gen_Sel(sgGen_Sel_Ord)
             igAct_PgD = 1
-            Call Cargar_Pag_Dis(sender.tag, 1)
+            Me.Cargar_Pag_Dis(sender.tag, 1)
         End If
     End Sub
 
@@ -203,9 +207,13 @@ Public Class FMain
         Disc_Img11.Click, Disc_Img12.Click
 
         If Not (sender.tag = 0) Then
-            igDis_Sel = sender.tag
+            sgDis_Sel_Id = sender.tag
+            sgDis_Sel_Ord = ExecSql_Result("SELECT id_ord FROM file02 WHERE id_gen='" & sgGen_Sel_Id & "' AND id_dis='" & sgDis_Sel_Id & "'", "id_ord")
+
+            Me.Busca_Sel_Dis(sgDis_Sel_Ord)
+
             igAct_PgC = 1
-            Call Cargar_Pag_Canc(sender.tag, 1)
+            Me.Cargar_Pag_Canc(sgDis_Sel_Id, 1)
         End If
     End Sub
 
@@ -214,12 +222,58 @@ Public Class FMain
         oLCanc6.Click, oLCanc7.Click, oLCanc8.Click, oLCanc9.Click, oLCanc10.Click,
         oLCanc11.Click, oLCanc12.Click, oLCanc13.Click
 
-        If Not (sender.tag = 0) Then
-            igCan_Sel = sender.tag
+        sgCan_Sel_Id = sender.tag
+        sgCan_Sel_Ord = ExecSql_Result("SELECT id_ord FROM file03 WHERE id_dis='" & sgDis_Sel_Id & "' AND id_can='" & sgCan_Sel_Id & "'", "id_ord")
 
-            igAct_PgG = 1
-            Cargar_Pag_Gen(igAct_PgG)
+        Me.Add_Tema(sgCan_Sel_Ord)
+    End Sub
+
+
+    Function ExecSql_Result(sCmd_Sql As String, sField As String) As String
+
+        '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------
+        Dim dar As SQLiteDataReader
+        If Not (oConnSqLite.State = ConnectionState.Open) Then
+            oConnSqLite.Open()
         End If
+
+        oCmmSqLite = New SQLiteCommand(sCmd_Sql, oConnSqLite)
+        dar = oCmmSqLite.ExecuteReader()
+        '----------------------------------------------------------------------------------
+
+        If (dar.HasRows = True) Then
+            dar.Read()
+            Return dar.Item(sField).ToString()
+        Else
+            Return ""
+        End If
+
+        dar.Close()
+        dar = Nothing
+    End Function
+
+    Sub Add_Tema(sCanc_Ord As String)
+        Dim sCad_Ato As String = ""
+        Dim sFle_Mp3 As String = ""
+
+        If sCanc_Ord <> "0" Then
+
+            If Me.Busca_Sel_Canc(sCanc_Ord, sCad_Ato, sFle_Mp3) = False Then
+                If (igLen >= 6) Then
+                    Me.oLTitulo.Text = "Tema no existe..."
+                Else
+                    Me.oLTitulo.Text = ""
+                End If
+            Else
+                Me.oLTitulo.Text = "[Seleccione le Tema]..."
+                If Me.Busca_ATocar(sCad_Ato) = False Then
+                    Me.oLst_A_Tocar.Items.Add(sCad_Ato)
+                End If
+            End If
+        End If
+
+        igAct_PgG = 1
+        Cargar_Pag_Gen(igAct_PgG)
     End Sub
 
     Sub Desactiva_Genero(ByRef pFlag As Boolean)
@@ -322,6 +376,8 @@ Public Class FMain
         igAct_PgC = 1
         Call Max_Pag_Gen()
 
+        Me.oGrpBox_Gen.Text = "<PASAR PÁGINA>    PÁGINA [" & Conversion.Str(igAct_PgG) & " DE " & Conversion.Str(igMax_RgG) & "]"
+
         Dim iNum_reg As Integer = 0
         '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------
         Dim sql As String = "SELECT id_gen, id_ord, descri FROM file01 WHERE page=" & pNum_Pag & " ORDER BY id_ord"
@@ -365,10 +421,12 @@ Public Class FMain
         '----------------------------------------------------------------------------------
         dar.Close()
         dar = Nothing
+        iNivel_Pag = 1
+
         Me.Desactiva_Genero(False)
     End Sub
 
-    Private Sub Cargar_Pag_Dis(ByVal pCod_Gen As String, ByVal pNum_Pag As Integer)
+    Private Sub Cargar_Pag_Dis(ByVal pId_Cod_Gen As String, ByVal pNum_Pag As Integer)
         Me.Desactiva_Genero(True)
         Me.Desactiva_Disco(True)
         Me.Desactiva_Cancion(True)
@@ -378,11 +436,13 @@ Public Class FMain
         '----------------------------------------------------------------------------------
 
         igAct_PgC = 1
-        Call Max_Pag_Dis(pCod_Gen)
+        Call Max_Pag_Dis(pId_Cod_Gen)
+
+        Me.oGrpBox_Dis.Text = "<PASAR PÁGINA>    PÁGINA [" & Conversion.Str(igAct_PgD) & " DE " & Conversion.Str(igMax_RgD) & "]"
 
         Dim iNum_reg As Integer = 0
         '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------
-        Dim sql As String = "SELECT * FROM file02 WHERE id_gen=" & pCod_Gen & " AND page=" & pNum_Pag & " ORDER BY id_gen, id_ord"
+        Dim sql As String = "SELECT * FROM file02 WHERE id_gen=" & pId_Cod_Gen & " AND page=" & pNum_Pag & " ORDER BY id_gen, id_ord"
         Dim dar As SQLiteDataReader
 
         If Not (oConnSqLite.State = ConnectionState.Open) Then
@@ -420,23 +480,22 @@ Public Class FMain
 
                 Me.Disc_Img(iNum_reg).TAG = Val(dar.Item("id_dis").ToString())
                 Me.Disc_Img(iNum_reg).cursor = Cursors.Hand
+                Me.Disc_Img(iNum_reg).initialImage = Nothing
+                Me.Disc_Img(iNum_reg).ImageLocation = ""
+                Me.Disc_Img(iNum_reg).Image = Nothing
 
                 If (Strings.Trim(sFile) = "") Then
-                    Me.Disc_Img(iNum_reg).ImageLocation = ""
                     Me.Disc_Img(iNum_reg).Image = My.Resources.Resources.sin_images
                 Else
                     'If IO.File.Exists(cPahFile) = True Then
-                    Me.Disc_Img(iNum_reg).Image = Nothing
                     Me.Disc_Img(iNum_reg).ImageLocation = cPahFile
                     'Else
-                    'Me.Disc_Img(iNum_reg).ImageLocation = ""
-                    'Me.Disc_Img(iNum_reg).Image = My.Resources.Resources.no_images
                     'End If
                 End If
 
                 Me.Disc_Img(iNum_reg).Visible = True
 
-                If Val(dar.Item("C_VIDEO").ToString) = 1 Then
+                If (Conversion.Val(dar.Item("C_VIDEO").ToString) = 1) Then
                     If bgVideoLabel = True Then
                         Me.Disc_Video(iNum_reg).Visible = True
                     End If
@@ -444,20 +503,26 @@ Public Class FMain
                     Me.Disc_Video(iNum_reg).Visible = False
                 End If
 
-                If Val(dar.Item("FL_NEW").ToString) = 1 Then
+                If (Conversion.Val(dar.Item("FL_NEW").ToString) = 1) Then
                     Me.Disk_New(iNum_reg).Visible = True
                 Else
                     Me.Disk_New(iNum_reg).Visible = False
                 End If
 
                 If bgDiscLabel = True Then
+                    Me.oDisc_LabelA(iNum_reg).Tag = Val(dar.Item("id_dis").ToString())
                     Me.oDisc_LabelA(iNum_reg).Visible = True
                     Me.oDisc_LabelA(iNum_reg).text = UCase(Strings.Trim(PADL(dar.Item("NOM_DIS").ToString, 19, " ")))
+
+                    Me.oDisc_LabelB(iNum_reg).Tag = Val(dar.Item("id_dis").ToString())
                     Me.oDisc_LabelB(iNum_reg).Visible = True
                     Me.oDisc_LabelB(iNum_reg).text = UCase(Strings.Trim(PADL(dar.Item("NOM_ART").ToString, 19, " ")))
                 Else
+                    Me.oDisc_LabelA(iNum_reg).Tag = ""
                     Me.oDisc_LabelA(iNum_reg).text = ""
                     Me.oDisc_LabelA(iNum_reg).Visible = False
+
+                    Me.oDisc_LabelB(iNum_reg).Tag = ""
                     Me.oDisc_LabelB(iNum_reg).text = ""
                     Me.oDisc_LabelB(iNum_reg).Visible = False
                 End If
@@ -493,6 +558,7 @@ Public Class FMain
             Me.oDisc_LabelB(i).BorderStyle = BorderStyle.None
 
             'IMAGEN DEL DISCO
+            Me.Disc_Img(i).initialImage = Nothing
             Me.Disc_Img(i).image = Nothing
             Me.Disc_Img(i).imagelocation = ""
             Me.Disc_Img(i).cursor = Cursors.Default
@@ -516,10 +582,13 @@ Public Class FMain
         '----------------------------------------------------------------------------------
         dar.Close()
         dar = Nothing
+        Me.oGrpBox_Dis.Refresh()
+
+        iNivel_Pag = 2
         Me.Desactiva_Disco(False)
     End Sub
 
-    Private Sub Cargar_Pag_Canc(ByVal pCod_Dis As String, ByVal pNum_Pag As Integer)
+    Private Sub Cargar_Pag_Canc(ByVal pId_Cod_Dis As String, ByVal pNum_Pag As Integer)
         Me.Desactiva_Genero(True)
         Me.Desactiva_Disco(True)
         Me.Desactiva_Cancion(True)
@@ -528,11 +597,13 @@ Public Class FMain
         REM Me.Limpia_Can()
         '----------------------------------------------------------------------------------
 
-        Call Max_Pag_Canc(pCod_Dis)
+        Call Max_Pag_Canc(pId_Cod_Dis)
+
+        Me.oGrpBox_Can.Text = "<PASAR PÁGINA>    PÁGINA [" & Conversion.Str(igAct_PgC) & " DE " & Conversion.Str(igMax_RgC) & "]"
 
         Dim iNum_reg As Integer = 0
         '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------
-        Dim sql As String = "SELECT * FROM file03 WHERE id_dis=" & pCod_Dis & " AND page=" & pNum_Pag & " ORDER BY id_dis, id_ord"
+        Dim sql As String = "SELECT * FROM file03 WHERE id_dis=" & pId_Cod_Dis & " AND page=" & pNum_Pag & " ORDER BY id_dis, id_ord"
         Dim dar As SQLiteDataReader
 
         If Not (oConnSqLite.State = ConnectionState.Open) Then
@@ -561,9 +632,9 @@ Public Class FMain
                 sLabel = dar.Item("DE_CAN").ToString
                 sNamFl = System.IO.Path.GetFileName(Strings.Trim(dar.Item("fl_mp3").ToString))
                 sExtFl = System.IO.Path.GetExtension(Strings.Trim(dar.Item("fl_mp3").ToString))
-
-                Me.Canc_Video(iNum_reg).Visible = True
-                If Not (sExtFl <> "MP3") Or (sExtFl <> ".MP3") Then
+                Dim cVideo As String = dar.Item("c_video").ToString
+                Dim iVideo As Integer = Conversion.Val(cVideo)
+                If (cVideo = "*") Then
                     Me.Canc_Video(iNum_reg).Image = My.Resources.Resources.icn_video_pk
                 Else
                     Me.Canc_Video(iNum_reg).Image = My.Resources.Resources.themes
@@ -573,13 +644,14 @@ Public Class FMain
                 If Not sLabel = "" Then
                     sLabel = sOrder & " - " & Proper(sLabel)
                 End If
-                sFile = sgDir_Mp3 & sNamFl
+                sFile = sgDir_Mp3 & "\" & sNamFl
 
                 If IO.File.Exists(sFile) = True Then
-                    Me.Canc_Nom(iNum_reg).Font = New Font(Me.oLCanc1.Font.Name, Me.oLCanc1.Font.Size, FontStyle.Bold Or Not FontStyle.Strikeout)
+                    Me.Canc_Nom(iNum_reg).Font = New Font("Times New Roman", 18, FontStyle.Bold)
                 Else
-                    Me.Canc_Nom(iNum_reg).Font = New Font(Me.oLCanc1.Font.Name, Me.oLCanc1.Font.Size, FontStyle.Bold Or FontStyle.Strikeout)
+                    Me.Canc_Nom(iNum_reg).Font = New Font("Times New Roman", 18, FontStyle.Bold Or FontStyle.Strikeout)
                 End If
+                Me.Canc_Nom(iNum_reg).refresh
 
                 Me.Canc_Nom(iNum_reg).TAG = dar.Item("id_can").ToString
                 Me.Canc_Nom(iNum_reg).TEXT = sLabel
@@ -607,12 +679,11 @@ Public Class FMain
             Me.Canc_Video(i).refresh
         Next i
         '----------------------------------------------------------------------------------
+        dar.Close()
+        dar = Nothing
 
+        iNivel_Pag = 3
         Me.Desactiva_Cancion(False)
-    End Sub
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        End
     End Sub
 
     Private Sub FMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -904,6 +975,10 @@ Public Class FMain
         Me.Cargar_Temas()
         If igScr_Alone = 0 Then
             Video_Form.Show()
+        Else
+            Me.oImg_Logo1.Location = Me.MediaPlayer2.Location
+            Me.oImg_Logo1.Size = Me.MediaPlayer2.Size
+
         End If
         If bgKeep_On_Top = True Then
             ' Call AlwaysOnTop(Main_Form, True)
@@ -1049,13 +1124,6 @@ Solve_error:
     Private Sub oGeneral_Timer_Tick(sender As Object, e As EventArgs) Handles oGeneral_Timer.Tick
         '------------------------------------------------------
         If bgBlinkPag = True Then
-            If Me.olPaginas.Visible = True Then
-                If (Me.olPaginas.ForeColor) <> ConvertToRbg(&HFFFF&) Then
-                    Me.olPaginas.ForeColor = ConvertToRbg(&HFFFF&)
-                Else
-                    Me.olPaginas.ForeColor = ConvertToRbg(&H0&)
-                End If
-            End If
             If Me.Img_PagNext.Visible = True Then
                 If Me.Img_PagNext.BorderStyle = 0 Then
                     Me.Img_PagNext.BorderStyle = 1
@@ -1070,16 +1138,7 @@ Solve_error:
                     Me.Img_PagPrev.BorderStyle = 0
                 End If
             End If
-            If olPaginas2.Visible = True Then
-                If (Me.olPaginas2.ForeColor) <> ConvertToRbg(&HFFFF&) Then
-                    Me.olPaginas2.ForeColor = ConvertToRbg(&HFFFF&)
-                Else
-                    Me.olPaginas2.ForeColor = ConvertToRbg(&H0&)
-                End If
-            End If
         Else
-            Me.olPaginas.ForeColor = ConvertToRbg(&HFFFF&)
-            Me.olPaginas2.ForeColor = ConvertToRbg(&HFFFF&)
             Me.Img_PagPrev.BorderStyle = 0
             Me.Img_PagNext.BorderStyle = 0
         End If
@@ -1088,7 +1147,7 @@ Solve_error:
             Exit Sub
         End If
         If igDelay_Return_Gen > 0 Then
-            'If igCan_Sel = "" Then
+            'If sgCan_Sel_Ord = "" Then
             'Sólo regresa a género si esta en la pantalla de discos
             If igNext_Return_Gen <= (Hour(Now()) * 60) + Minute(Now()) Then
                 Me.Retrocede()
@@ -1207,7 +1266,7 @@ Solve_error:
                     End If
                 End If
             Else
-                igGen_Sel = "" : igDis_Sel = "" : igCan_Sel = ""
+                sgGen_Sel_Ord = "" : sgDis_Sel_Ord = "" : sgCan_Sel_Ord = ""
             End If
         End If
         '   *******************************************************************************
@@ -1256,16 +1315,16 @@ Solve_error:
                 Me.olTimer1.Visible = False
                 Me.olTimer2.Visible = False
 
-                igGen_Sel = ""
-                igDis_Sel = ""
-                igCan_Sel = ""
+                sgGen_Sel_Ord = ""
+                sgDis_Sel_Ord = ""
+                sgCan_Sel_Ord = ""
 
                 igAct_PgG = 1
                 igAct_PgD = 1
                 igAct_PgC = 1
 
                 igNext_Return_Gen = 0
-                Me.Image2.Visible = False
+                'Me.Image2.Visible = False
                 If Me.oGrpBox_Gen.Visible = False Then
                     Me.Cargar_Pag_Gen(1)
                 End If
@@ -1279,12 +1338,15 @@ Solve_error:
                     Me.oService_Info.Visible = True
                     Exit Sub
                 End If
-                Dim sGen_Ret As String
-                igGen_Sel = ""
-                igDis_Sel = ""
-                igCan_Sel = ""
+                sgGen_Sel_Ord = ""
+                sgDis_Sel_Ord = ""
+                sgCan_Sel_Ord = ""
 
-                Me.Image2.ImageLocation = ""
+                sgGen_Sel_Id = ""
+                sgDis_Sel_Id = ""
+                sgCan_Sel_Id = ""
+
+                'Me.Image2.ImageLocation = ""
                 If (igLen < 2) Then
                     Exit Sub
                 End If
@@ -1308,7 +1370,7 @@ Solve_error:
                         Me.Cargar_Pag_Dis(sgGen_Sel_Id, igAct_PgD)
                     End If
                 End If
-                    bgVIP = False
+                bgVIP = False
                 igNext_Return_Gen = (Hour(Now()) * 60) + (Minute(Now()) + igDelay_Return_Gen)
                 If (Conversion.Val(Me.olTimer1.Text) = 0) Then
                     Me.olTimer1.Text = Format(igDelay_Return_Gen * 60, "#0")
@@ -1319,9 +1381,13 @@ Solve_error:
                     Exit Sub
                 End If
 
-                igDis_Sel = ""
-                igCan_Sel = ""
-                Me.Image2.ImageLocation = Nothing
+                sgDis_Sel_Ord = ""
+                sgCan_Sel_Ord = ""
+
+                sgDis_Sel_Id = ""
+                sgCan_Sel_Id = ""
+
+                'Me.Image2.ImageLocation = Nothing
                 If (igLen < 4) Then
                     REM Me.Desactiva_Disco(False)
                     Exit Sub
@@ -1340,7 +1406,7 @@ Solve_error:
                 End If
                 igAct_PgC = 1
 
-                Me.Image2.Visible = True
+                'Me.Image2.Visible = True
                 '***********************CANCION************************
                 If Me.oGrpBox_Can.Visible = False Then
                     If igLen = 4 Then
@@ -1348,7 +1414,7 @@ Solve_error:
                     End If
                 End If
 
-                    bgVIP = False
+                bgVIP = False
             Case 5 To 6
                 If gbServ_Mode = True Then
                     Select Case Strings.Trim(Me.otCodigo.Text)
@@ -1411,14 +1477,17 @@ Solve_error:
                     Exit Sub
                 End If
 
-                Dim sCad_Ato As String
-                Dim sFle_Mp3 As String
-                igCan_Sel = ""
+                Dim sCad_Ato As String = ""
+                Dim sFle_Mp3 As String = ""
+
+                sgCan_Sel_Ord = ""
+                sgCan_Sel_Id = ""
+
                 If (igLen < 6) Then
                     Exit Sub
                 End If
                 Dim sValSel As String = Strings.Mid(sValue, 5, 6)
-                If Me.Busca_Sel_Canc(sValSel, sCad_Ato, sFle_Mp3) = False Then
+                If (Me.Busca_Sel_Canc(sValSel, sCad_Ato, sFle_Mp3) = False) Then
                     If (igLen >= 6) Then
                         Me.oLTitulo.Text = "Tema no existe..."
                     Else
@@ -1430,8 +1499,8 @@ Solve_error:
                 Else
                     Me.oLTitulo.Text = "[Seleccione le Tema]..."
                 End If
-                If Me.oGrpBox_Can.Visible = False Then
-                    Me.Cargar_Pag_Canc(igDis_Sel, igAct_PgC)
+                If (Me.oGrpBox_Can.Visible = False) Then
+                    Me.Cargar_Pag_Canc(sgDis_Sel_Id, igAct_PgC)
                 End If
 
                 If igLen = 6 Then
@@ -1445,38 +1514,38 @@ Solve_error:
                                 Else
                                     Me.oLst_A_Tocar.Items.Add(sCad_Ato)
                                 End If
-                                If igKeep_Cred = 0 Then
-                                    If igCnt_CR > 0 Then
+                                If (igKeep_Cred = 0) Then
+                                    If (igCnt_CR > 0) Then
                                         igCnt_CR = igCnt_CR - 1
                                     End If
                                 End If
                             Else
-                                If sgKb_VID = 0 Then
-                                    If igNoDuplicT = 1 Then
+                                If (sgKb_VID = 0) Then
+                                    If (igNoDuplicT = 1) Then
                                         If Me.Busca_ATocar(sCad_Ato) = False Then
                                             Me.oLst_A_Tocar.Items.Add(sCad_Ato)
                                         End If
                                     Else
                                         Me.oLst_A_Tocar.Items.Add(sCad_Ato)
                                     End If
-                                    If igKeep_Cred = 0 Then
-                                        If igCnt_CR > 0 Then
+                                    If (igKeep_Cred = 0) Then
+                                        If (igCnt_CR > 0) Then
                                             igCnt_CR = igCnt_CR - 1
                                         End If
                                     End If
                                 Else
-                                    If sgKb_VID > igCnt_CR Then
+                                    If (sgKb_VID > igCnt_CR) Then
                                         Me.olMessage.Visible = True
                                         Me.olMessage.Text = "CREDITOS INSUFICIENTES!"
                                         Me.oTime_Mensajes.Enabled = True
                                         Call Retrocede()
                                         Exit Sub
                                     Else
-                                        If igKeep_Cred = 0 Then
+                                        If (igKeep_Cred = 0) Then
                                             igCnt_CR = igCnt_CR - sgKb_VID
                                         End If
-                                        If igNoDuplicT = 1 Then
-                                            If Me.Busca_ATocar(sCad_Ato) = False Then
+                                        If (igNoDuplicT = 1) Then
+                                            If (Me.Busca_ATocar(sCad_Ato) = False) Then
                                                 Me.oLst_A_Tocar.Items.Add(sCad_Ato)
                                             End If
                                         Else
@@ -1486,24 +1555,24 @@ Solve_error:
                                 End If
                             End If
                         Else
-                            If Me.oLst_A_Tocar.Items.Count Then
+                            If (Me.oLst_A_Tocar.Items.Count = 0) Then
                                 Me.oLst_A_Tocar.Items.Add(sCad_Ato)
                             Else
                                 Me.oLst_A_Tocar.Items.Insert(1, sCad_Ato)
                             End If
-                            If igKeep_Cred = 0 Then
+                            If (igKeep_Cred = 0) Then
                                 igCnt_CR = igCnt_CR - 2
                             End If
-                            If igCnt_CR < 0 Then
+                            If (igCnt_CR < 0) Then
                                 igCnt_CR = 0
                             End If
                             bgVIP = False
                             Me.olMessageVIP.Visible = False
                         End If
                         '---Segmento que añade los bonus de promociones--
-                        If sgIdx_Prm > 0 Then
+                        If (sgIdx_Prm > 0) Then
                             piCnt_Canc = piCnt_Canc + 1
-                            If piCnt_Canc >= sgIdx_Prm Then
+                            If (piCnt_Canc >= sgIdx_Prm) Then
                                 piCnt_Canc = 0
                                 Dim sCad_Ato2 As String = Me.Add_Promos()
 
@@ -1526,8 +1595,8 @@ Solve_error:
                         Me.Retrocede()
                         Exit Sub
                     End If
-                    If igKeep_Cred = 0 Then
-                        If igCnt_CR > 0 Then
+                    If (igKeep_Cred = 0) Then
+                        If (igCnt_CR > 0) Then
                             Me.olMessage.Visible = True
                             Me.olMessage.Text = "TEMA FUE ANEXADO!"
                             Me.oTime_Mensajes.Enabled = True
@@ -1567,30 +1636,30 @@ Solve_error:
         Next i
     End Function
 
-    Private Function Busca_Gen_Sel(ByVal pValor_Bus As String) As Boolean
-        Dim dar As SQLiteDataReader
-        Dim sql As String
+    Private Function Busca_Gen_Sel(ByVal pId_Ord_Bus As String) As Boolean
+        Dim oDar As SQLiteDataReader
+        Dim cSql As String
         '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------     
 
         If Not (oConnSqLite.State = ConnectionState.Open) Then
             oConnSqLite.Open()
         End If
 
-        sql = "SELECT * FROM file01 WHERE id_ord='" & Strings.Trim(pValor_Bus) & "' LIMIT 1"
-        oCmmSqLite = New SQLiteCommand(sql, oConnSqLite)
-        dar = oCmmSqLite.ExecuteReader()
+        cSql = "SELECT * FROM file01 WHERE id_ord='" & Strings.Trim(pId_Ord_Bus) & "' LIMIT 1"
+        oCmmSqLite = New SQLiteCommand(cSql, oConnSqLite)
+        oDar = oCmmSqLite.ExecuteReader()
 
         '----------------------------------------------------------------------------------
         Try
-            If dar.HasRows = True Then
-                dar.Read()
-                sgGen_Sel_Id = dar.Item("id_gen").ToString()
-                igGen_Sel = dar.Item("id_ord").ToString()
-                igAct_PgG = Conversion.Val(dar.Item("page").ToString())
+            If oDar.HasRows = True Then
+                oDar.Read()
+                sgGen_Sel_Id = oDar.Item("id_gen").ToString()
+                sgGen_Sel_Ord = oDar.Item("id_ord").ToString()
+                igAct_PgG = Conversion.Val(oDar.Item("page").ToString())
                 Return True
             Else
                 sgGen_Sel_Id = ""
-                igGen_Sel = ""
+                sgGen_Sel_Ord = ""
                 igAct_PgG = 0
                 Return False
             End If
@@ -1599,16 +1668,16 @@ Solve_error:
         Catch ex As SQLiteException
             Console.WriteLine("Error: " & ex.ToString())
             sgGen_Sel_Id = ""
-            igGen_Sel = ""
+            sgGen_Sel_Ord = ""
             igAct_PgG = 0
             Return False
         Finally
-            dar.Close()
-            dar = Nothing
+            oDar.Close()
+            oDar = Nothing
         End Try
     End Function
 
-    Private Function Busca_Sel_Dis(ByVal pValor_Bus As String) As Boolean
+    Private Function Busca_Sel_Dis(ByVal pId_Ord_Bus As String) As Boolean
         Dim dar As SQLiteDataReader
         Dim sql As String
         '------CONEXION A LA BASE DE DATOS SQL LITE----------------------------------------
@@ -1617,7 +1686,7 @@ Solve_error:
             oConnSqLite.Open()
         End If
 
-        sql = "SELECT * FROM file02 WHERE id_gen='" & Strings.Trim(sgGen_Sel_Id) & "' AND id_ord='" & Strings.Trim(pValor_Bus) & "' LIMIT 1"
+        sql = "SELECT * FROM file02 WHERE id_gen='" & Strings.Trim(sgGen_Sel_Id) & "' AND id_ord='" & Strings.Trim(pId_Ord_Bus) & "' LIMIT 1"
         oCmmSqLite = New SQLiteCommand(sql, oConnSqLite)
         dar = oCmmSqLite.ExecuteReader()
 
@@ -1626,16 +1695,24 @@ Solve_error:
             If dar.HasRows = True Then
                 dar.Read()
                 sgDis_Sel_Id = dar.Item("id_dis").ToString()
-                igDis_Sel = dar.Item("id_ord").ToString()
+                sgDis_Sel_Ord = dar.Item("id_ord").ToString()
                 igAct_PgD = Conversion.Val(dar.Item("page").ToString())
                 Dim sNamFl As String = System.IO.Path.GetFileName(Strings.Trim(dar.Item("fl_img").ToString))
                 Dim sFile As String = sgDir_Img & sNamFl
+
+                Me.Image2.Image = Nothing
+                Me.Image2.InitialImage = Nothing
                 Me.Image2.ImageLocation = sFile
+                Me.Image2.Refresh()
+                Me.Image2.Visible = True
+
+
                 Return True
             Else
                 Me.Image2.ImageLocation = Nothing
+                Me.Image2.Visible = False
                 sgDis_Sel_Id = ""
-                igDis_Sel = ""
+                sgDis_Sel_Ord = ""
                 igAct_PgD = 0
                 Return False
             End If
@@ -1645,7 +1722,7 @@ Solve_error:
             Console.WriteLine("Error: " & ex.ToString())
             Me.Image2.ImageLocation = Nothing
             sgDis_Sel_Id = ""
-            igDis_Sel = ""
+            sgDis_Sel_Ord = ""
             igAct_PgD = 0
             Return False
         Finally
@@ -1654,7 +1731,7 @@ Solve_error:
         End Try
     End Function
 
-    Private Function Busca_Sel_Canc(ByVal pValor_Bus As String, ByRef cLineAdd As String, ByRef cFilemp3 As String) As Boolean
+    Private Function Busca_Sel_Canc(ByVal pId_Ord_Bus As String, ByRef cLineAdd As String, ByRef cFilemp3 As String) As Boolean
 
         Dim dar As SQLiteDataReader
         Dim sql As String
@@ -1669,11 +1746,13 @@ Solve_error:
             "file03.ID_CAN," &
             "file03.DE_CAN," &
             "file03.FL_MP3," &
+            "file03.c_video," &
+            "file02.fl_prd," &
             "file03.page," &
              "file02.fl_img " &
             "FROM file03 " &
             "LEFT JOIN file02 ON file03.id_dis = file02.id_dis " &
-            "WHERE file03.id_dis = '" & Strings.Trim(sgDis_Sel_Id) & "' And file03.id_ord = '" & Strings.Trim(pValor_Bus) & "' LIMIT 1"
+            "WHERE file03.id_dis = '" & Strings.Trim(sgDis_Sel_Id) & "' And file03.id_ord = '" & Strings.Trim(pId_Ord_Bus) & "' LIMIT 1"
 
         oCmmSqLite = New SQLiteCommand(sql, oConnSqLite)
         dar = oCmmSqLite.ExecuteReader()
@@ -1683,23 +1762,25 @@ Solve_error:
             If dar.HasRows = True Then
                 dar.Read()
                 sgCan_Sel_Id = dar.Item("id_can").ToString()
-                igCan_Sel = dar.Item("id_ord").ToString()
+                sgCan_Sel_Ord = dar.Item("id_ord").ToString()
                 igAct_PgC = Conversion.Val(dar.Item("page").ToString())
 
                 Dim sFld1 As String = dar.Item("id_ord").ToString()
                 Dim sFld2 As String = dar.Item("ID_CAN").ToString()
                 Dim sFld3 As String = dar.Item("DE_CAN").ToString()
                 Dim sNamFl As String = System.IO.Path.GetFileName(Strings.Trim(dar.Item("FL_MP3").ToString()))
-                Dim sFld4 As String = sgDir_Mp3 & sNamFl
-                Dim sFld5 As String = ""
+                Dim sFld4 As String = sgDir_Mp3 & "\" & sNamFl
+                Dim sFld5 As String = "" REM CStr(CInt(dar.Item("fl_prd").ToString()))
                 Dim sFld6 As String = dar.Item("fl_img").ToString()
-                cLineAdd = sFld1 & "," & sFld2 & "," & sFld3 & "," & sFld4 & "," & sFld5 & "," & sFld6
+                Dim sFld7 As String = dar.Item("c_video").ToString()
+                Dim sFld8 As String = sgGen_Sel_Ord & sgDis_Sel_Ord & sgCan_Sel_Ord
+                cLineAdd = sFld1 & "," & sFld2 & "," & sFld3 & "," & sFld4 & "," & sFld5 & "," & sFld6 & "," & sFld7 & "," & sFld8
                 cFilemp3 = sFld4
                 Return True
             Else
                 Me.Image2.ImageLocation = Nothing
                 sgCan_Sel_Id = ""
-                igCan_Sel = ""
+                sgCan_Sel_Ord = ""
                 igAct_PgC = 0
                 cLineAdd = ""
                 Return False
@@ -1709,7 +1790,7 @@ Solve_error:
         Catch ex As SQLiteException
             Console.WriteLine("Error: " & ex.ToString())
             sgCan_Sel_Id = ""
-            igCan_Sel = ""
+            sgCan_Sel_Ord = ""
             igAct_PgC = 0
             cLineAdd = ""
             Return False
@@ -1753,27 +1834,26 @@ Solve_error:
             igLen = Trim(sValue).Length
             Select Case igLen
                 Case <= 2
-                    If Me.oGrpBox_Gen.Visible = False Then
+                    If (Me.oGrpBox_Gen.Visible = False) Then
                         If Me.oGrpBox_Can.Visible = True Then
                             Me.Desactiva_Cancion(True)
                         End If
-                        If Me.oGrpBox_Dis.Visible = True Then
+                        If (Me.oGrpBox_Dis.Visible = True) Then
                             Me.Desactiva_Disco(True)
                         End If
                         Me.Desactiva_Genero(False)
                     End If
                 Case <= 4
-                    If Me.oGrpBox_Dis.Visible = False Then
-                        If Me.oGrpBox_Can.Visible = True Then
+                    If (Me.oGrpBox_Dis.Visible = False) Then
+                        If (Me.oGrpBox_Can.Visible = True) Then
                             Me.Desactiva_Cancion(True)
                         End If
-                        If Me.oGrpBox_Gen.Visible = True Then
+                        If (Me.oGrpBox_Gen.Visible = True) Then
                             Me.Desactiva_Genero(True)
                         End If
                         Me.Desactiva_Genero(False)
                     End If
             End Select
-
         End If
 
         If (e.KeyCode = 123) Then 'F12 PARA SALIR DEL SISTEMA
@@ -1795,7 +1875,7 @@ Solve_error:
         REM Exit Sub
         REM End If
 
-        If Asc(e.KeyChar) = 8 Then
+        If (Asc(e.KeyChar) = 8) Then
             Me.Focus()
             Exit Sub
         End If
@@ -1808,12 +1888,12 @@ Solve_error:
             Exit Sub
         End If
         If (UCase(e.KeyChar) = sgKb_Pause) Then
-            If Me.oLst_A_Tocar.Items.Count = 0 Then
+            If (Me.oLst_A_Tocar.Items.Count = 0) Then
                 Exit Sub
             End If
             'If igScr_Alone = 1 Then
-            If bgIs_Video = True Then
-                If Me.MediaPlayer2.playState = WMPLib.WMPPlayState.wmppsPaused Then
+            If (bgIs_Video = True) Then
+                If (Me.MediaPlayer2.playState = WMPLib.WMPPlayState.wmppsPaused) Then
                     Me.MediaPlayer2.Ctlcontrols.play()
                     Video_Form.MediaPlayer3.Ctlcontrols.play()
                     Me.otCargador_Music.Enabled = True
@@ -1831,7 +1911,7 @@ Solve_error:
         If (UCase(e.KeyChar) = sgKb_Vef) Then
             bgExit = False
             REM bFlagChek = False
-            If TBack4.Visible = False Then
+            If (TBack4.Visible = False) Then
                 TBack4.Visible = True
             Else
                 TBack4.Visible = False
@@ -1844,7 +1924,7 @@ Solve_error:
             Me.olMessage.Text = "SWITCHING VIDEO..."
             Me.oTime_Mensajes.Enabled = True
             igInd_Pub = 0
-            If bgSw_Pub = False Then
+            If (bgSw_Pub = False) Then
                 Me.oInd_VideoSW.Image = My.Resources.grnled
                 Me.oInd_VideoSW.Visible = True
             Else
@@ -1857,7 +1937,7 @@ Solve_error:
         End If
 
         If (UCase(e.KeyChar) = sgKb_Ret) Then
-            Call Retrocede()
+            Me.Retrocede()
             e.KeyChar = ChrW(Keys.None)
         End If
 
@@ -1865,13 +1945,18 @@ Solve_error:
             'Sección que se ejecuta si se preciona [S/s] (Reset single active music)
             Video_Form.MediaPlayer3.close()
             Me.MediaPlayer2.close()
-            REM Main_Form.MediaPlayer1.Close
+            Me.MediaPlayer1.close()
+
+            Me.Image2.InitialImage = Nothing
+            Me.Image2.Image = Nothing
+            Me.Image2.ImageLocation = ""
+            Me.Image2.Visible = True
 
             Me.oLDuracion.Text = "00:00"
             Me.olAct_Pos.Text = "00:00"
             bfTm = False
 
-            If igInd_Pub < igTot_Pub Then
+            If (igInd_Pub < igTot_Pub) Then
                 igInd_Pub = igInd_Pub + 1
             Else
                 igInd_Pub = 0
@@ -1879,7 +1964,7 @@ Solve_error:
             Me.olMessage.Visible = True
             Me.olMessage.Text = "TEMA IGNORADO"
             Me.oTime_Mensajes.Enabled = True
-            If Me.oLst_A_Tocar.Items.Count > 0 Then
+            If (Me.oLst_A_Tocar.Items.Count > 0) Then
                 Me.oLst_A_Tocar.Items.RemoveAt(0)
             Else
                 Me.olMessage.Visible = True
@@ -1894,6 +1979,8 @@ Solve_error:
             Me.Salvar_Temas()
             Me.oSetFocus_Codigo.Focus()
             e.KeyChar = ChrW(Keys.None)
+            Me.Refresh_Creditos()
+            Call Me.Cargar_Pag_Gen(1)
         End If
 
         If (UCase(e.KeyChar) = sgKb_ResA) Then
@@ -1901,6 +1988,12 @@ Solve_error:
 
             Me.oLDuracion.Text = "00:00"
             Me.olAct_Pos.Text = "00:00"
+
+            Me.Image2.InitialImage = Nothing
+            Me.Image2.Image = Nothing
+            Me.Image2.ImageLocation = ""
+            Me.Image2.Visible = True
+
             bfTm = False
             Me.olMessage.Visible = True
             Me.olMessage.Text = "CREDITOS ANULADOS"
@@ -1909,31 +2002,33 @@ Solve_error:
             Me.oLst_A_Tocar.Items.Clear()
             Video_Form.MediaPlayer3.close()
             Me.MediaPlayer2.close()
-            REM Main_Form.MediaPlayer1.Close
+            Me.MediaPlayer1.close()
             Me.oSetFocus_Codigo.Focus()
 
-            If igInd_Pub < igTot_Pub Then
+            If (igInd_Pub < igTot_Pub) Then
                 igInd_Pub = igInd_Pub + 1
             Else
                 igInd_Pub = 0
             End If
-            Me.Cargar_Pag_Gen(1)
 
-            Me.Muestra_Tema_Det()
-            Me.Refresh_Creditos()
             bgWMP_Busy = False
+            sgKb_VIP = False
             igCont_Sin = 0
             If (igKeep_Cred = 0) Then
                 igCnt_CR = 0
-                If igFlg_SavedCR = 1 Then
+                If (igFlg_SavedCR = 1) Then
                     oIni.SetKeyValue("CREDITS", "ACU_SAVECR", Format(igCnt_CR, "#####0"))
                 End If
             Else
                 igCnt_CR = 6
             End If
             Me.Salvar_Temas()
-            Me.oSetFocus_Codigo.Focus()
             e.KeyChar = ChrW(Keys.None)
+            Me.Refresh_Creditos()
+            Me.otCodigo.Text = ""
+            Me.Muestra_Tema_Det()
+            Me.oSetFocus_Codigo.Focus()
+            Call Me.Cargar_Pag_Gen(1)
         End If
 
         If (UCase(e.KeyChar) = sgKb_Crd1) Then
@@ -1945,8 +2040,8 @@ Solve_error:
 
         If (UCase(e.KeyChar) = sgKb_Del) Then
             'Sección que se ejecuta si se preciona [-] (Crédito)
-            If igKeep_Cred = 0 Then
-                If igCnt_CR > 0 Then
+            If (igKeep_Cred = 0) Then
+                If (igCnt_CR > 0) Then
                     igCnt_CR = igCnt_CR - 1
                     Me.Refresh_Creditos()
                 End If
@@ -1955,8 +2050,8 @@ Solve_error:
         End If
 
         If (UCase(e.KeyChar) = sgKb_Crd2) Then
-            If Strings.Trim(sgCr_AKey) = "" Then
-                Me.olMessage.Text = "NO SE HA CONDIGURADO ACCESO"
+            If (Strings.Trim(sgCr_AKey) = "") Then
+                Me.olMessage.Text = "NO SE HA CONFIGURADO ACCESO"
                 Me.olMessage.Visible = True
                 Me.oTime_Mensajes.Enabled = True
                 Me.oSetFocus_Codigo.Focus()
@@ -1972,11 +2067,11 @@ Solve_error:
 
         If (UCase(e.KeyChar) = sgKb_Pop) Then
             'Sección que se ejecuta si se preciona [P/p] (Popular)
-            If igLen < 4 Then
+            If (igLen < 4) Then
                 Exit Sub
             End If
             If (igLen > 3) And (igLen < 7) Then
-                If igKeep_Cred = 0 Then
+                If (igKeep_Cred = 0) Then
                     If (igCnt_CR < Me.oLst_Popular.Items.Count) Then
                         Me.olMessage.Text = "CRÉDITOS INSUFICIENTES"
                         Me.olMessage.Visible = True
@@ -1991,8 +2086,10 @@ Solve_error:
                             Me.oLst_A_Tocar.Items.Add(Me.oLst_Popular.Items(0))
                             Me.oLst_Popular.Items.RemoveAt(0)
                         Next iLimCnt
-                        If igMixe_Popu > 0 Then
-                            Call Shuffle_ListBox(Me.oLst_A_Tocar)
+                        If (igMixe_Popu > 0) Then
+                            Call Shuffle_ListBox(Me.oLst_A_Tocar, True)
+                            Me.oLst_A_Tocar.REFRESH
+
                         End If
                     End If
                 Else
@@ -2000,15 +2097,15 @@ Solve_error:
                     Me.olMessage.Visible = True
                     Me.oTime_Mensajes.Enabled = True
                     For iLimCnt = 1 To (Me.oLst_Popular.Items.Count)
-                        If igKeep_Cred = 0 Then
+                        If (igKeep_Cred = 0) Then
                             igCnt_CR = igCnt_CR - 1
                         End If
                         Me.Refresh_Creditos()
                         Me.oLst_A_Tocar.Items.Add(Me.oLst_Popular.Items(0))
                         Me.oLst_Popular.Items.RemoveAt(0)
                     Next iLimCnt
-                    If igMixe_Popu > 0 Then
-                        Call Shuffle_ListBox(Me.oLst_A_Tocar)
+                    If (igMixe_Popu > 0) Then
+                        Call Shuffle_ListBox(Me.oLst_A_Tocar, True)
                     End If
                 End If
                 Call Cargar_Gen()
@@ -2019,11 +2116,11 @@ Solve_error:
 
         If (UCase(e.KeyChar) = sgKb_VIP) Then
             'Sección que se ejecuta si se preciona [V/v] (VIP)
-            If igLen < 4 Then
+            If (igLen < 4) Then
                 Exit Sub
             End If
             If (igLen > 3) And (igLen < 7) Then
-                If igKeep_Cred = 0 Then
+                If (igKeep_Cred = 0) Then
                     If (igCnt_CR < 2) Then
                         Me.olMessage.Text = "CRÉDITOS INSUFICIENTES"
                         Me.olMessage.Visible = True
@@ -2151,50 +2248,58 @@ Solve_error:
             If (igAct_PgG > 1) Then
                 igAct_PgG = igAct_PgG - 1
                 Me.Cargar_Pag_Gen(igAct_PgG)
+                Me.oGrpBox_Gen.Text = "<PASAR PÁGINA>    PÁGINA [" & Conversion.Str(igAct_PgG) & " DE " & Conversion.Str(igMax_RgG) & "]"
             End If
         End If
         If Me.oGrpBox_Dis.Visible = True Then
             If (igAct_PgD > 1) Then
                 igAct_PgD = igAct_PgD - 1
-                Me.Cargar_Pag_Dis(igGen_Sel, igAct_PgD)
+                Me.Cargar_Pag_Dis(sgGen_Sel_Id, igAct_PgD)
+                Me.oGrpBox_Dis.Text = "<PASAR PÁGINA>    PAGINA [" & Conversion.Str(igAct_PgD) & " DE " & Conversion.Str(igMax_RgD) & "]"
             End If
         End If
 
         If Me.oGrpBox_Can.Visible = True Then
             If (igAct_PgC > 1) Then
                 igAct_PgC = igAct_PgC - 1
-                Me.Cargar_Pag_Canc(igDis_Sel, igAct_PgC)
+                Me.Cargar_Pag_Canc(sgDis_Sel_Id, igAct_PgC)
+                Me.oGrpBox_Can.Text = "<PASAR PÁGINA>    PÁGINA [" & Conversion.Str(igAct_PgC) & " DE " & Conversion.Str(igMax_RgC) & "]"
             End If
         End If
     End Sub
 
     Private Sub Change_Page_Dn()
         If (Me.oGrpBox_Gen.Visible = True) Then
-            If (igAct_PgG <= igMax_Gen) Then
-                If igAct_PgG < igMax_RgG Then
-                    igAct_PgG = igAct_PgG + 1
-                    Me.Cargar_Pag_Gen(igAct_PgG)
-                End If
+            REM If (igAct_PgG <= igMax_Gen) Then
+            If igAct_PgG <= igMax_RgG Then
+                igAct_PgG = igAct_PgG + 1
+                Me.Cargar_Pag_Gen(igAct_PgG)
+                Me.oGrpBox_Gen.Text = "<PASAR PÁGINA>    PÁGINA [" & Conversion.Str(igAct_PgG) & " DE " & Conversion.Str(igMax_RgG) & "]"
             End If
+            REM End If
         End If
 
         If (Me.oGrpBox_Dis.Visible = True) Then
-            If (igAct_PgD <= igMax_Dis) Then
-                If igAct_PgD < igMax_RgD Then
-                    igAct_PgD = igAct_PgD + 1
-                    Me.Cargar_Pag_Dis(igGen_Sel, igAct_PgD)
-                End If
+            REM If (igAct_PgD <= igMax_Dis) Then
+            If igAct_PgD < igMax_RgD Then
+                igAct_PgD = igAct_PgD + 1
+                Me.Cargar_Pag_Dis(sgGen_Sel_Id, igAct_PgD)
+                Me.oGrpBox_Dis.Text = "<PASAR PÁGINA>    PÁGINA [" & Conversion.Str(igAct_PgD) & " DE " & Conversion.Str(igMax_RgD) & "]"
+            Else
+                REM Me.Cargar_Pag_Dis(sgGen_Sel_Id, igMax_RgD)
             End If
+            REM End If
         End If
 
         If (Me.oGrpBox_Can.Visible = True) Then
-            If (igAct_PgC <= igMax_Can) Then
-                If igAct_PgC < igMax_RgC Then
-                    igAct_PgC = igAct_PgC + 1
-                    Me.Cargar_Pag_Canc(igDis_Sel, igAct_PgC)
-                End If
+            REM If (igAct_PgC <= igMax_Can) Then
+            If igAct_PgC < igMax_RgC Then
+                igAct_PgC = igAct_PgC + 1
+                Me.Cargar_Pag_Canc(sgDis_Sel_Id, igAct_PgC)
+                Me.oGrpBox_Can.Text = "<PASAR PÁGINA>    PÁGINA [" & Conversion.Str(igAct_PgC) & " DE " & Conversion.Str(igMax_RgC) & "]"
             End If
         End If
+        REM End If
     End Sub
 
     Private Sub Desplazar_Pantalla_Gen(ByVal pPage_Order As Char)
@@ -2239,7 +2344,7 @@ Solve_error:
             If Me.oGrpBox_Dis.Visible = True Then
                 If (igAct_PgD > 1) Then
                     igAct_PgD = igAct_PgD - 1
-                    Me.Cargar_Pag_Dis(igGen_Sel, igAct_PgD)
+                    Me.Cargar_Pag_Dis(sgGen_Sel_Id, igAct_PgD)
                 End If
             End If
 
@@ -2250,7 +2355,7 @@ Solve_error:
                 If (igAct_PgD <= igMax_Dis) Then
                     If igAct_PgD < igMax_RgD Then
                         igAct_PgD = igAct_PgD + 1
-                        Me.Cargar_Pag_Dis(igGen_Sel, igAct_PgD)
+                        Me.Cargar_Pag_Dis(sgGen_Sel_Id, igAct_PgD)
                     End If
                 End If
             End If
@@ -2268,7 +2373,7 @@ Solve_error:
             If Me.oGrpBox_Can.Visible = True Then
                 If (igAct_PgC > 1) Then
                     igAct_PgC = igAct_PgC - 1
-                    Me.Cargar_Pag_Canc(igDis_Sel, igAct_PgC)
+                    Me.Cargar_Pag_Canc(sgDis_Sel_Id, igAct_PgC)
                 End If
             End If
         End If
@@ -2278,7 +2383,7 @@ Solve_error:
                 If (igAct_PgC <= igMax_Can) Then
                     If igAct_PgC < igMax_RgC Then
                         igAct_PgC = igAct_PgC + 1
-                        Me.Cargar_Pag_Canc(igDis_Sel, igAct_PgC)
+                        Me.Cargar_Pag_Canc(sgDis_Sel_Id, igAct_PgC)
                     End If
                 End If
             End If
@@ -2335,12 +2440,13 @@ Solve_error:
             End If
 
             If IO.File.Exists(sgDir_Img & "\Logo1.bmp") Then
-                Me.oImg_Logo1.Image = Nothing
-                Me.oImg_Logo1.ImageLocation = sgDir_Img & "\Logo1.bmp"
-                Me.oImg_Logo1.Visible = True
+                If (Me.oImg_Logo1.ImageLocation <> sgDir_Img & "\Logo1.bmp") Then
+                    Me.oImg_Logo1.Image = Nothing
+                    Me.oImg_Logo1.ImageLocation = sgDir_Img & "\Logo1.bmp"
+                    Me.oImg_Logo1.Visible = True
+                    Me.MediaPlayer2.Visible = False
+                End If
                 Me.MediaPlayer2.close()
-                Me.MediaPlayer2.Visible = False
-
             Else
                 Me.oImg_Logo1.Image = Nothing
                 Me.oImg_Logo1.ImageLocation = ""
@@ -2374,7 +2480,9 @@ Solve_error:
                 Video_Form.oImg_Logo1.ImageLocation = ""
                 Video_Form.MediaPlayer3.Visible = True
             End If
-            Me.Cargar_Musica
+            Me.Cargar_Musica()
+
+
             'Me.otCodigo.SetFocus
         End If
         Exit Sub
@@ -2443,34 +2551,40 @@ Solve_error:
     End Function
 
     Private Sub Conectar_DBPub(Optional bPopulate_ListPub As Boolean = True)
+        Dim sFullName As String
         If (bgLoad_pub = False) Then
             Try
-                oDirPub1 = New IO.DirectoryInfo(sgDir_Pub1)
-                oFlsPub1 = oDirPub1.GetFiles("*.*")
+                If (bgSw_Pub = False) Then
+                    oDirPub1 = New IO.DirectoryInfo(sgDir_Pub1)
+                    oFlsPub1 = oDirPub1.GetFiles("*.*")
 
-                If (bPopulate_ListPub = True) Then
-                    Dim dra1 As IO.FileInfo
-                    Me.oLst_Temas_Pub.Items.Clear()
-                    For Each dra1 In oFlsPub1
-                        Me.oLst_Temas_Pub.Items.Add(dra1.GetType.FullName.ToString())
-                    Next
-                    dra1 = Nothing
-                    Call Shuffle_ListBox(Me.oLst_Temas_Pub)
+                    If (bPopulate_ListPub = True) Then
+                        Dim dra1 As IO.FileInfo
+                        Me.oLst_Temas_Pub.Items.Clear()
+                        For Each dra1 In oFlsPub1
+                            sFullName = dra1.FullName.ToString()
+                            Me.oLst_Temas_Pub.Items.Add(sFullName)
+                        Next
+                        dra1 = Nothing
+                        Call Shuffle_ListBox(Me.oLst_Temas_Pub, True)
+                    End If
+                    igTot_Pub = Me.oLst_Temas_Pub.Items.Count
+                Else
+                    oDirPub2 = New IO.DirectoryInfo(sgDir_Pub2)
+                    oFlsPub2 = oDirPub2.GetFiles("*.*")
+
+                    If (bPopulate_ListPub = True) Then
+                        Dim dra2 As IO.FileInfo
+                        Me.oLst_Temas_Pub.Items.Clear()
+                        For Each dra2 In oFlsPub2
+                            sFullName = dra2.FullName.ToString()
+                            Me.oLst_Temas_Pub.Items.Add(sFullName)
+                        Next
+                        dra2 = Nothing
+                        Call Shuffle_ListBox(Me.oLst_Temas_Pub, True)
+                    End If
+                    igTot_Pub = Me.oLst_Temas_Pub.Items.Count
                 End If
-
-                oDirPub2 = New IO.DirectoryInfo(sgDir_Pub2)
-                oFlsPub2 = oDirPub2.GetFiles("*.*")
-
-                If (bPopulate_ListPub = True) Then
-                    Dim dra2 As IO.FileInfo
-                    Me.oLst_Temas_Pub.Items.Clear()
-                    For Each dra2 In oFlsPub2
-                        Me.oLst_Temas_Pub.Items.Add(dra2.GetType.FullName.ToString())
-                    Next
-                    dra2 = Nothing
-                    Call Shuffle_ListBox(Me.oLst_Temas_Pub)
-                End If
-
             Catch ex As Exception
                 Console.WriteLine("Error: " & ex.ToString())
             End Try
@@ -2507,6 +2621,12 @@ Solve_error:
         If Me.oLst_A_Tocar.Items(0) <> "" Then
             aDet = Strings.Split(Me.oLst_A_Tocar.Items(0), ",", , vbTextCompare)
             sFle_Mp3 = Strings.Trim(Strings.Trim(aDet(3)))
+
+            Me.Image2.InitialImage = Nothing
+            Me.Image2.Image = Nothing
+            Me.Image2.ImageLocation = aDet(5)
+            Me.Image2.Visible = True
+
             If (UCase(Strings.Right(Strings.Trim(sFle_Mp3), 3)) <> "MP3") Then
                 bgIs_Video = True
                 Me.oImg_c_Video.Visible = True
@@ -2532,40 +2652,78 @@ Solve_error:
     End Sub
 
     Private Sub Cargar_Musica_P0(ByVal spFle_Mp3 As String)
-        If bgIs_Video = True Then
-            If (Video_Form.MediaPlayer3.URL <> spFle_Mp3) Then
-                Me.MediaPlayer2.close()
-            Else
-                If ObPlayer_Ocupado(Video_Form.MediaPlayer3) = True Then
+        If igScr_Alone = 1 Then
+            If bgIs_Video = True Then
+                If ObPlayer_Ocupado(Me.MediaPlayer2) = True Then
                     Exit Sub
                 End If
+
+                '*********************VISOR DE VIDEO CHICO****************************
+                Me.MediaPlayer1.close()
+                Me.MediaPlayer1.settings.mute = True
+                Video_Form.MediaPlayer3.close()
+                Video_Form.MediaPlayer3.settings.mute = True
+
+                Me.MediaPlayer2.URL = spFle_Mp3
+                Me.MediaPlayer2.settings.mute = False
+                Me.MediaPlayer2.settings.volume = 120
+                Me.MediaPlayer2.Ctlcontrols.play()
+                '***********************************************
+            Else
+                If ObPlayer_Ocupado(Me.MediaPlayer1) = True Then
+                    Exit Sub
+                End If
+
+                '********************TOCADOR DE MUSICA SOLA***************************
+                Me.MediaPlayer2.close()
+                Me.MediaPlayer2.settings.mute = True
+                Video_Form.MediaPlayer3.close()
+                Video_Form.MediaPlayer3.settings.mute = True
+
+                Me.MediaPlayer1.URL = spFle_Mp3
+                Me.MediaPlayer1.settings.mute = False
+                Me.MediaPlayer1.settings.volume = 120
+                Me.MediaPlayer1.Ctlcontrols.play()
+                '***********************************************
             End If
-            '********************VISOR DE VIDEO GRANDE****************************
-            Video_Form.MediaPlayer3.URL = spFle_Mp3
-            Video_Form.MediaPlayer3.settings.mute = False
-            Video_Form.MediaPlayer3.settings.volume = 120
-            Video_Form.MediaPlayer3.Ctlcontrols.play()
-            '********************TOCADOR DE MUSICA SOLA***************************
-            Me.MediaPlayer1.URL = ""
-            Me.MediaPlayer1.settings.mute = True
-            '*********************VISOR DE VIDEO CHICO****************************
-            Me.MediaPlayer2.URL = ""
-            Me.MediaPlayer2.settings.mute = True
         Else
-            If ObPlayer_Ocupado(Me.MediaPlayer1) = True Then
-                Exit Sub
+            If bgIs_Video = True Then
+                If (Video_Form.MediaPlayer3.URL <> spFle_Mp3) Then
+                    Me.MediaPlayer2.close()
+                Else
+                    If ObPlayer_Ocupado(Video_Form.MediaPlayer3) = True Then
+                        Exit Sub
+                    End If
+                End If
+                '********************VISOR DE VIDEO GRANDE****************************
+                Video_Form.MediaPlayer3.URL = spFle_Mp3
+                Video_Form.MediaPlayer3.settings.mute = False
+                Video_Form.MediaPlayer3.settings.volume = 120
+                Video_Form.MediaPlayer3.Ctlcontrols.play()
+                '********************TOCADOR DE MUSICA SOLA***************************
+                Me.MediaPlayer1.URL = ""
+                Me.MediaPlayer1.settings.mute = True
+                '*********************VISOR DE VIDEO CHICO****************************
+                Me.MediaPlayer2.URL = ""
+                Me.MediaPlayer2.settings.mute = True
+            Else
+                If ObPlayer_Ocupado(Me.MediaPlayer1) = True Then
+                    Exit Sub
+                End If
+                '********************VISOR DE VIDEO GRANDE****************************
+                Video_Form.MediaPlayer3.URL = ""
+                Video_Form.MediaPlayer3.settings.mute = True
+                '********************TOCADOR DE MUSICA SOLA***************************
+                Me.MediaPlayer1.URL = spFle_Mp3
+                Me.MediaPlayer1.settings.mute = False
+                Me.MediaPlayer1.settings.volume = 120
+                Me.MediaPlayer1.Ctlcontrols.play()
+
+                '*********************VISOR DE VIDEO CHICO****************************
+                Me.MediaPlayer2.URL = ""
+                Me.MediaPlayer2.settings.mute = True
+                '***********************************************
             End If
-            '********************VISOR DE VIDEO GRANDE****************************
-            Video_Form.MediaPlayer3.URL = ""
-            Video_Form.MediaPlayer3.settings.mute = True
-            '********************TOCADOR DE MUSICA SOLA***************************
-            Me.MediaPlayer1.URL = spFle_Mp3
-            Me.MediaPlayer1.settings.mute = False
-            Me.MediaPlayer1.settings.volume = 120
-            '*********************VISOR DE VIDEO CHICO****************************
-            Me.MediaPlayer2.URL = ""
-            Me.MediaPlayer2.settings.mute = True
-            '***********************************************
         End If
     End Sub
 
@@ -2614,13 +2772,12 @@ Solve_error:
             Exit Sub
         End If
         aDet = Strings.Split(Me.oLst_A_Tocar.Items(0), ",", , vbTextCompare)
-        Me.otTema_Act.Text = aDet(0)
-        If (Strings.Trim(aDet(4)) = "*") Then
+        Me.otTema_Act.Text = aDet(7)
+        If ((Strings.Trim(aDet(4)) = "1") Or (Strings.Trim(aDet(4)) = "*")) Then
             Me.olCred_Msg.Tag = Me.olCred_Msg.Text
             Me.olCred_Msg.Text = "DISCO PROMO..."
-            Me.Image2.ImageLocation = aDet(5)
         Else
-            If Me.olCred_Msg.Text <> "INSERTE ¢ 0.25" Then
+            If (Me.olCred_Msg.Text <> "INSERTE ¢ 0.25") Then
                 Me.olCred_Msg.Text = "INSERTE ¢ 0.25"
             End If
             Me.Refresh_Creditos()
@@ -2637,6 +2794,198 @@ Solve_error:
     End Sub
 
     Private Sub oTM_Box_Tick(sender As Object, e As EventArgs) Handles oTM_Box.Tick
+        If bfTm = True Then
+            If bgIs_Video = False Then
+                Me.oLDuracion.Text = Me.MediaPlayer1.currentMedia.durationString
+                Me.olAct_Pos.Text = Me.MediaPlayer1.Ctlcontrols.currentPositionString
+            Else
+                If igScr_Alone = 1 Then
+                    Me.oLDuracion.Text = Me.MediaPlayer2.currentMedia.durationString
+                    Me.olAct_Pos.Text = Me.MediaPlayer2.Ctlcontrols.currentPositionString
+                Else
+                    Me.oLDuracion.Text = Video_Form.MediaPlayer3.currentMedia.durationString
+                    Me.olAct_Pos.Text = Video_Form.MediaPlayer3.Ctlcontrols.currentPositionString
+                End If
+            End If
+        Else
+            Me.oLDuracion.Text = "00:00"
+            Me.olAct_Pos.Text = "00:00"
+            Me.oTM_Box.Enabled = False
+        End If
+        Application.DoEvents()
+    End Sub
 
+    Private Sub MediaPlayer1_PlayStateChange(sender As Object, e As AxWMPLib._WMPOCXEvents_PlayStateChangeEvent) Handles MediaPlayer1.PlayStateChange
+        Select Case e.newState
+            Case Is = WMPLib.WMPPlayState.wmppsMediaEnded
+                bgIs_Video = False
+                bgWMP_Busy = False
+                Call Muestra_Tema_Det()
+
+                If (igScr_Alone = 0) Then
+                    Video_Form.MediaPlayer3.close()
+                End If
+                Me.MediaPlayer2.close()
+
+                If (igDelay_Bonus_Vid > 0) Then
+                    igNext_Bonus = (Hour(Now()) * 60) + (Minute(Now()) + igDelay_Bonus_Vid)
+                End If
+                If (bgIs_Video = True) Then
+                    Exit Sub
+                End If
+                Call Remove_Temes()
+                igCont_Sin = 0
+                bfTm = False
+            Case Is = WMPLib.WMPPlayState.wmppsPlaying
+                Me.otCargador_Music.Enabled = True
+                bgIs_Video = False
+                bgWMP_Busy = False
+                bfTm = True
+                Me.oTM_Box.Enabled = True
+        End Select
+
+    End Sub
+
+    Private Sub MediaPlayer1_MediaError(sender As Object, e As _WMPOCXEvents_MediaErrorEvent) Handles MediaPlayer1.MediaError
+        Me.olMessage.Visible = True
+        Me.olMessage.Text = "TEMA NO DISPONIBLE"
+        Me.oTime_Mensajes.Enabled = True
+        Call Remove_Temes()
+
+        If (igKeep_Cred = 0) Then
+            igCnt_CR = igCnt_CR + 1
+        End If
+        Me.Refresh_Creditos()
+        Call Sleep(3) '*1000 'Implements a 3 second delay
+        My.Computer.Keyboard.SendKeys("S")
+    End Sub
+
+    Private Sub MediaPlayer2_PlayStateChange(sender As Object, e As _WMPOCXEvents_PlayStateChangeEvent) Handles MediaPlayer2.PlayStateChange
+        If igScr_Alone = 1 Then
+            Select Case e.newState
+                Case Is = WMPLib.WMPPlayState.wmppsMediaEnded
+                    If (bgIs_Video = True) Then
+                        If igScr_Alone = 1 Then
+                            bfTm = False
+                        End If
+                    End If
+                    bgWMP_Busy = False
+                    Me.Muestra_Tema_Det()
+                    igCont_Sin = 0
+                    If (igDelay_Bonus_Vid > 0) Then
+                        igNext_Bonus = (Hour(Now()) * 60) + (Minute(Now()) + igDelay_Bonus_Vid)
+                    End If
+                    If (bgIs_Video = False) Then
+                        Exit Sub
+                    End If
+                    Me.Remove_Temes()
+                Case Is = WMPLib.WMPPlayState.wmppsPlaying
+                    If (bgIs_Video = True) Then
+                        If (igScr_Alone = 1) Then
+                            bfTm = True
+                            Me.oTM_Box.Enabled = True
+                        End If
+                    End If
+                    If (igCont_Sin > 0) Then
+                        Exit Sub
+                    End If
+                    bgWMP_Busy = True
+                    igCont_Sin = igCont_Sin + 1
+            End Select
+        End If
+
+    End Sub
+
+    Private Sub olCreditos_Click(sender As Object, e As EventArgs) Handles olCreditos.Click
+        End
+    End Sub
+
+    Private Sub PictureBox1_Click(sender As Object, e As EventArgs) Handles PictureBox1.Click
+        If iNivel_Pag = 3 Then
+            iNivel_Pag = iNivel_Pag - 1
+            Me.Cargar_Pag_Dis(sgGen_Sel_Id, 1)
+            Exit Sub
+        End If
+
+        If iNivel_Pag = 2 Then
+            iNivel_Pag = iNivel_Pag - 1
+            Me.Cargar_Pag_Gen(1)
+            Exit Sub
+        End If
+
+    End Sub
+
+    Private Sub otCargador_Video_Tick(sender As Object, e As EventArgs) Handles otCargador_Video.Tick
+        'Si no hay mas temas en lista para tocar no mostrar màs videos.
+        If (Me.oLst_A_Tocar.Items.Count <= 0) Then
+            'Me.otCodigo.SetFocus
+            Exit Sub
+        End If
+        'Si no hay mas videos que presentar, salir.
+        If (Me.oLst_Temas_Pub.Items.Count <= 0) Then
+            Me.olMessage.Visible = True
+            Me.olMessage.Text = "LA LISTA DE PUBLICIDAD ESTA VACÍA!"
+            Me.oTime_Mensajes.Enabled = True
+            igInd_Pub = 0
+            igTot_Pub = 0
+            Exit Sub
+        End If
+        Dim sFle_MpG As String
+        Dim sFle_Tmp As String
+        Dim aDet() As String
+        sFle_Tmp = Me.MediaPlayer1.URL
+        If Strings.UCase(Strings.Right(sFle_Tmp, 3)) <> "MP3" Then
+            Exit Sub
+        End If
+        If (igInd_Pub = 0) Then
+            igInd_Pub = 1
+        End If
+        sFle_MpG = Me.oLst_Temas_Pub.Items(igInd_Pub)
+        If IO.File.Exists(sFle_MpG) Then
+            If (igScr_Alone = 0) Then
+                If (bgIs_Video = False) Then
+                    If (Me.ObPlayer_Ocupado(Video_Form.MediaPlayer3) = True) Then
+                        Exit Sub
+                    End If
+                Else
+                    If (Me.ObPlayer_Ocupado(Me.MediaPlayer1) = True) Then
+                        Exit Sub
+                    End If
+                End If
+                Me.olMensaje_Video.Text = "CARGANDO VIDEO"
+                Me.olMensaje_Video.Visible = True
+                Video_Form.MediaPlayer3.close()
+                Video_Form.MediaPlayer3.URL = Strings.Trim(sFle_MpG)
+                Video_Form.MediaPlayer3.settings.mute = True
+                Video_Form.MediaPlayer3.Ctlcontrols.play()
+            Else
+                If (bgIs_Video = False) Then
+                    If (Me.ObPlayer_Ocupado(Me.MediaPlayer2) = True) Then
+                        Exit Sub
+                    End If
+                Else
+                    If (ObPlayer_Ocupado(Me.MediaPlayer1) = True) Then
+                        Exit Sub
+                    End If
+                End If
+                Me.olMensaje_Video.Text = "CARGANDO VIDEO"
+                Me.olMensaje_Video.Visible = True
+                Me.MediaPlayer2.close()
+                Me.MediaPlayer2.URL = Strings.Trim(sFle_MpG)
+                Me.MediaPlayer2.settings.mute = True
+                Me.MediaPlayer2.Ctlcontrols.play()
+            End If
+        Else
+            If (sFle_MpG = "") Then
+                Me.olMessage.Visible = True
+                Me.olMessage.Text = "PUBLICIDAD NO ENCONTRADO!"
+                Me.oTime_Mensajes.Enabled = True
+            End If
+        End If
+        If (igInd_Pub < igTot_Pub) Then
+            igInd_Pub = igInd_Pub + 1
+        Else
+            igInd_Pub = 0
+        End If
     End Sub
 End Class

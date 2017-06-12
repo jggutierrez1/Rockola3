@@ -1,0 +1,2 @@
+02,154140,Ese Negro Si Toca,D:\Rockola\cancionero\082502.MP3,,d:\Rockola\Fotos\v25.jpg,System.Byte[],070102
+03,154141,Cachucha Bacana,D:\Rockola\cancionero\082503.MP3,,d:\Rockola\Fotos\v25.jpg,System.Byte[],070103

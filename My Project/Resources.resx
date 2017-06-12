@@ -118,23 +118,26 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="a" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\fotos\a.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="grnled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\grnled.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="New" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\New.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="sin_images" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\sin_images.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="icn_video_pk" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\icn_video_pk.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="afwd" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\afwd.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="aback" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\aback.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="no_images" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\no_images.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="grnled" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\grnled.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="afwd" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\afwd.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="redled" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\redled.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,10 +145,10 @@
   <data name="themes" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\themes.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="aback" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\aback.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="a" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\fotos\a.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="sin_images" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\sin_images.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="left_blue_arrow_f2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\left_blue_arrow_f2.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

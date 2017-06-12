@@ -25,7 +25,6 @@ Partial Class FMain
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FMain))
         Me.MediaPlayer2 = New AxWMPLib.AxWindowsMediaPlayer()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.oTime_Mensajes = New System.Windows.Forms.Timer(Me.components)
         Me.olMessage = New System.Windows.Forms.Label()
         Me.oLTitulo = New System.Windows.Forms.Label()
@@ -149,9 +148,8 @@ Partial Class FMain
         Me.oLGenero2 = New System.Windows.Forms.Label()
         Me.oLGenero1 = New System.Windows.Forms.Label()
         Me.oLVersion = New System.Windows.Forms.Label()
-        Me.olPaginas2 = New System.Windows.Forms.Label()
-        Me.olPaginas = New System.Windows.Forms.Label()
         Me.oGrp_in_Sel = New System.Windows.Forms.GroupBox()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.Img_PagNext = New System.Windows.Forms.PictureBox()
         Me.Img_PagPrev = New System.Windows.Forms.PictureBox()
         Me.olTimer2 = New System.Windows.Forms.Label()
@@ -201,6 +199,7 @@ Partial Class FMain
         Me.MediaPlayer1 = New AxWMPLib.AxWindowsMediaPlayer()
         Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
         Me.oTimer_Srv = New System.Windows.Forms.Timer(Me.components)
+        Me.otCargador_Video = New System.Windows.Forms.Timer(Me.components)
         CType(Me.MediaPlayer2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.oGrpBox_Dis.SuspendLayout()
         CType(Me.Disk_New12, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -257,6 +256,7 @@ Partial Class FMain
         CType(Me.oICancVideo1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.oGrpBox_Gen.SuspendLayout()
         Me.oGrp_in_Sel.SuspendLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Img_PagNext, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Img_PagPrev, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.oInd_VideoSW, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -275,22 +275,13 @@ Partial Class FMain
         Me.MediaPlayer2.Size = New System.Drawing.Size(343, 277)
         Me.MediaPlayer2.TabIndex = 1
         '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(6, 694)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 2
-        Me.Button1.Text = "Salir"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
         'oTime_Mensajes
         '
         Me.oTime_Mensajes.Interval = 1200
         '
         'olMessage
         '
-        Me.olMessage.BackColor = System.Drawing.Color.White
+        Me.olMessage.BackColor = System.Drawing.Color.Transparent
         Me.olMessage.Cursor = System.Windows.Forms.Cursors.Default
         Me.olMessage.Font = New System.Drawing.Font("Palatino Linotype", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.olMessage.ForeColor = System.Drawing.Color.Red
@@ -392,11 +383,14 @@ Partial Class FMain
         Me.oGrpBox_Dis.Controls.Add(Me.Disc_Img3)
         Me.oGrpBox_Dis.Controls.Add(Me.Disc_Img2)
         Me.oGrpBox_Dis.Controls.Add(Me.Disc_Img1)
-        Me.oGrpBox_Dis.Location = New System.Drawing.Point(307, 81)
+        Me.oGrpBox_Dis.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.oGrpBox_Dis.ForeColor = System.Drawing.Color.Yellow
+        Me.oGrpBox_Dis.Location = New System.Drawing.Point(640, 11)
         Me.oGrpBox_Dis.Name = "oGrpBox_Dis"
         Me.oGrpBox_Dis.Size = New System.Drawing.Size(53, 55)
         Me.oGrpBox_Dis.TabIndex = 7
         Me.oGrpBox_Dis.TabStop = False
+        Me.oGrpBox_Dis.Text = "Disc."
         Me.oGrpBox_Dis.Visible = False
         '
         'oDisc_LabelA12
@@ -404,7 +398,7 @@ Partial Class FMain
         Me.oDisc_LabelA12.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA12.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA12.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA12.Location = New System.Drawing.Point(465, 560)
+        Me.oDisc_LabelA12.Location = New System.Drawing.Point(465, 575)
         Me.oDisc_LabelA12.Name = "oDisc_LabelA12"
         Me.oDisc_LabelA12.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA12.TabIndex = 90
@@ -416,7 +410,7 @@ Partial Class FMain
         Me.oDisc_LabelB12.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB12.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB12.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB12.Location = New System.Drawing.Point(465, 578)
+        Me.oDisc_LabelB12.Location = New System.Drawing.Point(465, 593)
         Me.oDisc_LabelB12.Name = "oDisc_LabelB12"
         Me.oDisc_LabelB12.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB12.TabIndex = 89
@@ -428,7 +422,7 @@ Partial Class FMain
         Me.oDisc_LabelA11.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA11.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA11.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA11.Location = New System.Drawing.Point(312, 560)
+        Me.oDisc_LabelA11.Location = New System.Drawing.Point(312, 575)
         Me.oDisc_LabelA11.Name = "oDisc_LabelA11"
         Me.oDisc_LabelA11.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA11.TabIndex = 88
@@ -440,7 +434,7 @@ Partial Class FMain
         Me.oDisc_LabelB11.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB11.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB11.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB11.Location = New System.Drawing.Point(312, 578)
+        Me.oDisc_LabelB11.Location = New System.Drawing.Point(312, 593)
         Me.oDisc_LabelB11.Name = "oDisc_LabelB11"
         Me.oDisc_LabelB11.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB11.TabIndex = 87
@@ -452,7 +446,7 @@ Partial Class FMain
         Me.oDisc_LabelA10.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA10.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA10.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA10.Location = New System.Drawing.Point(159, 560)
+        Me.oDisc_LabelA10.Location = New System.Drawing.Point(159, 575)
         Me.oDisc_LabelA10.Name = "oDisc_LabelA10"
         Me.oDisc_LabelA10.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA10.TabIndex = 86
@@ -464,7 +458,7 @@ Partial Class FMain
         Me.oDisc_LabelB10.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB10.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB10.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB10.Location = New System.Drawing.Point(159, 578)
+        Me.oDisc_LabelB10.Location = New System.Drawing.Point(159, 593)
         Me.oDisc_LabelB10.Name = "oDisc_LabelB10"
         Me.oDisc_LabelB10.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB10.TabIndex = 85
@@ -476,7 +470,7 @@ Partial Class FMain
         Me.oDisc_LabelA9.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA9.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA9.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA9.Location = New System.Drawing.Point(6, 560)
+        Me.oDisc_LabelA9.Location = New System.Drawing.Point(6, 575)
         Me.oDisc_LabelA9.Name = "oDisc_LabelA9"
         Me.oDisc_LabelA9.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA9.TabIndex = 84
@@ -488,7 +482,7 @@ Partial Class FMain
         Me.oDisc_LabelB9.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB9.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB9.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB9.Location = New System.Drawing.Point(6, 578)
+        Me.oDisc_LabelB9.Location = New System.Drawing.Point(6, 593)
         Me.oDisc_LabelB9.Name = "oDisc_LabelB9"
         Me.oDisc_LabelB9.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB9.TabIndex = 83
@@ -500,7 +494,7 @@ Partial Class FMain
         Me.oDisc_LabelA8.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA8.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA8.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA8.Location = New System.Drawing.Point(465, 362)
+        Me.oDisc_LabelA8.Location = New System.Drawing.Point(465, 373)
         Me.oDisc_LabelA8.Name = "oDisc_LabelA8"
         Me.oDisc_LabelA8.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA8.TabIndex = 82
@@ -512,7 +506,7 @@ Partial Class FMain
         Me.oDisc_LabelB8.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB8.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB8.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB8.Location = New System.Drawing.Point(465, 380)
+        Me.oDisc_LabelB8.Location = New System.Drawing.Point(465, 391)
         Me.oDisc_LabelB8.Name = "oDisc_LabelB8"
         Me.oDisc_LabelB8.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB8.TabIndex = 81
@@ -524,7 +518,7 @@ Partial Class FMain
         Me.oDisc_LabelA7.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA7.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA7.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA7.Location = New System.Drawing.Point(312, 362)
+        Me.oDisc_LabelA7.Location = New System.Drawing.Point(312, 373)
         Me.oDisc_LabelA7.Name = "oDisc_LabelA7"
         Me.oDisc_LabelA7.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA7.TabIndex = 80
@@ -536,7 +530,7 @@ Partial Class FMain
         Me.oDisc_LabelB7.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB7.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB7.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB7.Location = New System.Drawing.Point(312, 380)
+        Me.oDisc_LabelB7.Location = New System.Drawing.Point(312, 391)
         Me.oDisc_LabelB7.Name = "oDisc_LabelB7"
         Me.oDisc_LabelB7.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB7.TabIndex = 79
@@ -548,7 +542,7 @@ Partial Class FMain
         Me.oDisc_LabelA6.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA6.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA6.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA6.Location = New System.Drawing.Point(159, 362)
+        Me.oDisc_LabelA6.Location = New System.Drawing.Point(159, 373)
         Me.oDisc_LabelA6.Name = "oDisc_LabelA6"
         Me.oDisc_LabelA6.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA6.TabIndex = 78
@@ -560,7 +554,7 @@ Partial Class FMain
         Me.oDisc_LabelB6.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB6.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB6.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB6.Location = New System.Drawing.Point(159, 380)
+        Me.oDisc_LabelB6.Location = New System.Drawing.Point(159, 391)
         Me.oDisc_LabelB6.Name = "oDisc_LabelB6"
         Me.oDisc_LabelB6.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB6.TabIndex = 77
@@ -572,7 +566,7 @@ Partial Class FMain
         Me.oDisc_LabelA5.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA5.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA5.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA5.Location = New System.Drawing.Point(6, 362)
+        Me.oDisc_LabelA5.Location = New System.Drawing.Point(6, 373)
         Me.oDisc_LabelA5.Name = "oDisc_LabelA5"
         Me.oDisc_LabelA5.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA5.TabIndex = 76
@@ -584,7 +578,7 @@ Partial Class FMain
         Me.oDisc_LabelB5.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB5.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB5.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB5.Location = New System.Drawing.Point(6, 380)
+        Me.oDisc_LabelB5.Location = New System.Drawing.Point(6, 391)
         Me.oDisc_LabelB5.Name = "oDisc_LabelB5"
         Me.oDisc_LabelB5.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB5.TabIndex = 75
@@ -596,7 +590,7 @@ Partial Class FMain
         Me.oDisc_LabelA4.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA4.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA4.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA4.Location = New System.Drawing.Point(465, 165)
+        Me.oDisc_LabelA4.Location = New System.Drawing.Point(465, 176)
         Me.oDisc_LabelA4.Name = "oDisc_LabelA4"
         Me.oDisc_LabelA4.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA4.TabIndex = 74
@@ -608,7 +602,7 @@ Partial Class FMain
         Me.oDisc_LabelB4.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB4.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB4.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB4.Location = New System.Drawing.Point(465, 183)
+        Me.oDisc_LabelB4.Location = New System.Drawing.Point(465, 194)
         Me.oDisc_LabelB4.Name = "oDisc_LabelB4"
         Me.oDisc_LabelB4.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB4.TabIndex = 73
@@ -620,7 +614,7 @@ Partial Class FMain
         Me.oDisc_LabelA3.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA3.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA3.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA3.Location = New System.Drawing.Point(312, 165)
+        Me.oDisc_LabelA3.Location = New System.Drawing.Point(312, 176)
         Me.oDisc_LabelA3.Name = "oDisc_LabelA3"
         Me.oDisc_LabelA3.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA3.TabIndex = 72
@@ -632,7 +626,7 @@ Partial Class FMain
         Me.oDisc_LabelB3.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB3.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB3.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB3.Location = New System.Drawing.Point(312, 183)
+        Me.oDisc_LabelB3.Location = New System.Drawing.Point(312, 194)
         Me.oDisc_LabelB3.Name = "oDisc_LabelB3"
         Me.oDisc_LabelB3.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB3.TabIndex = 71
@@ -644,7 +638,7 @@ Partial Class FMain
         Me.oDisc_LabelA2.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA2.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA2.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA2.Location = New System.Drawing.Point(159, 165)
+        Me.oDisc_LabelA2.Location = New System.Drawing.Point(159, 176)
         Me.oDisc_LabelA2.Name = "oDisc_LabelA2"
         Me.oDisc_LabelA2.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA2.TabIndex = 70
@@ -656,7 +650,7 @@ Partial Class FMain
         Me.oDisc_LabelB2.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB2.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB2.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB2.Location = New System.Drawing.Point(159, 183)
+        Me.oDisc_LabelB2.Location = New System.Drawing.Point(159, 194)
         Me.oDisc_LabelB2.Name = "oDisc_LabelB2"
         Me.oDisc_LabelB2.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB2.TabIndex = 69
@@ -669,7 +663,7 @@ Partial Class FMain
         Me.Disk_New12.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New12.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New12.InitialImage = Nothing
-        Me.Disk_New12.Location = New System.Drawing.Point(522, 403)
+        Me.Disk_New12.Location = New System.Drawing.Point(522, 418)
         Me.Disk_New12.Name = "Disk_New12"
         Me.Disk_New12.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New12.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -683,7 +677,7 @@ Partial Class FMain
         Me.Disk_New11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New11.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New11.InitialImage = Nothing
-        Me.Disk_New11.Location = New System.Drawing.Point(369, 403)
+        Me.Disk_New11.Location = New System.Drawing.Point(369, 418)
         Me.Disk_New11.Name = "Disk_New11"
         Me.Disk_New11.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New11.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -697,7 +691,7 @@ Partial Class FMain
         Me.Disk_New10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New10.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New10.InitialImage = Nothing
-        Me.Disk_New10.Location = New System.Drawing.Point(217, 403)
+        Me.Disk_New10.Location = New System.Drawing.Point(217, 418)
         Me.Disk_New10.Name = "Disk_New10"
         Me.Disk_New10.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -711,7 +705,7 @@ Partial Class FMain
         Me.Disk_New9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New9.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New9.InitialImage = Nothing
-        Me.Disk_New9.Location = New System.Drawing.Point(67, 403)
+        Me.Disk_New9.Location = New System.Drawing.Point(67, 418)
         Me.Disk_New9.Name = "Disk_New9"
         Me.Disk_New9.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -725,7 +719,7 @@ Partial Class FMain
         Me.Disk_New8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New8.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New8.InitialImage = Nothing
-        Me.Disk_New8.Location = New System.Drawing.Point(522, 209)
+        Me.Disk_New8.Location = New System.Drawing.Point(522, 220)
         Me.Disk_New8.Name = "Disk_New8"
         Me.Disk_New8.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -739,7 +733,7 @@ Partial Class FMain
         Me.Disk_New7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New7.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New7.InitialImage = Nothing
-        Me.Disk_New7.Location = New System.Drawing.Point(369, 209)
+        Me.Disk_New7.Location = New System.Drawing.Point(369, 220)
         Me.Disk_New7.Name = "Disk_New7"
         Me.Disk_New7.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -753,7 +747,7 @@ Partial Class FMain
         Me.Disk_New6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New6.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New6.InitialImage = Nothing
-        Me.Disk_New6.Location = New System.Drawing.Point(217, 209)
+        Me.Disk_New6.Location = New System.Drawing.Point(217, 220)
         Me.Disk_New6.Name = "Disk_New6"
         Me.Disk_New6.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -767,7 +761,7 @@ Partial Class FMain
         Me.Disk_New5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New5.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New5.InitialImage = Nothing
-        Me.Disk_New5.Location = New System.Drawing.Point(67, 209)
+        Me.Disk_New5.Location = New System.Drawing.Point(67, 220)
         Me.Disk_New5.Name = "Disk_New5"
         Me.Disk_New5.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -781,7 +775,7 @@ Partial Class FMain
         Me.Disk_New4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New4.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New4.InitialImage = Nothing
-        Me.Disk_New4.Location = New System.Drawing.Point(522, 12)
+        Me.Disk_New4.Location = New System.Drawing.Point(522, 23)
         Me.Disk_New4.Name = "Disk_New4"
         Me.Disk_New4.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -795,7 +789,7 @@ Partial Class FMain
         Me.Disk_New3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New3.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New3.InitialImage = Nothing
-        Me.Disk_New3.Location = New System.Drawing.Point(369, 12)
+        Me.Disk_New3.Location = New System.Drawing.Point(369, 23)
         Me.Disk_New3.Name = "Disk_New3"
         Me.Disk_New3.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -809,7 +803,7 @@ Partial Class FMain
         Me.Disk_New2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New2.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New2.InitialImage = Nothing
-        Me.Disk_New2.Location = New System.Drawing.Point(217, 12)
+        Me.Disk_New2.Location = New System.Drawing.Point(217, 23)
         Me.Disk_New2.Name = "Disk_New2"
         Me.Disk_New2.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -823,7 +817,7 @@ Partial Class FMain
         Me.Disc_Video12.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video12.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video12.InitialImage = Nothing
-        Me.Disc_Video12.Location = New System.Drawing.Point(584, 402)
+        Me.Disc_Video12.Location = New System.Drawing.Point(584, 417)
         Me.Disc_Video12.Name = "Disc_Video12"
         Me.Disc_Video12.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video12.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -837,7 +831,7 @@ Partial Class FMain
         Me.Disc_Video11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video11.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video11.InitialImage = Nothing
-        Me.Disc_Video11.Location = New System.Drawing.Point(431, 402)
+        Me.Disc_Video11.Location = New System.Drawing.Point(431, 417)
         Me.Disc_Video11.Name = "Disc_Video11"
         Me.Disc_Video11.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video11.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -851,7 +845,7 @@ Partial Class FMain
         Me.Disc_Video10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video10.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video10.InitialImage = Nothing
-        Me.Disc_Video10.Location = New System.Drawing.Point(277, 402)
+        Me.Disc_Video10.Location = New System.Drawing.Point(277, 417)
         Me.Disc_Video10.Name = "Disc_Video10"
         Me.Disc_Video10.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -865,7 +859,7 @@ Partial Class FMain
         Me.Disc_Video9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video9.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video9.InitialImage = Nothing
-        Me.Disc_Video9.Location = New System.Drawing.Point(124, 402)
+        Me.Disc_Video9.Location = New System.Drawing.Point(124, 417)
         Me.Disc_Video9.Name = "Disc_Video9"
         Me.Disc_Video9.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -879,7 +873,7 @@ Partial Class FMain
         Me.Disc_Video8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video8.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video8.InitialImage = Nothing
-        Me.Disc_Video8.Location = New System.Drawing.Point(584, 204)
+        Me.Disc_Video8.Location = New System.Drawing.Point(584, 215)
         Me.Disc_Video8.Name = "Disc_Video8"
         Me.Disc_Video8.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -893,7 +887,7 @@ Partial Class FMain
         Me.Disc_Video7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video7.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video7.InitialImage = Nothing
-        Me.Disc_Video7.Location = New System.Drawing.Point(431, 204)
+        Me.Disc_Video7.Location = New System.Drawing.Point(431, 215)
         Me.Disc_Video7.Name = "Disc_Video7"
         Me.Disc_Video7.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -907,7 +901,7 @@ Partial Class FMain
         Me.Disc_Video6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video6.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video6.InitialImage = Nothing
-        Me.Disc_Video6.Location = New System.Drawing.Point(277, 204)
+        Me.Disc_Video6.Location = New System.Drawing.Point(277, 215)
         Me.Disc_Video6.Name = "Disc_Video6"
         Me.Disc_Video6.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -921,7 +915,7 @@ Partial Class FMain
         Me.Disc_Video5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video5.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video5.InitialImage = Nothing
-        Me.Disc_Video5.Location = New System.Drawing.Point(124, 204)
+        Me.Disc_Video5.Location = New System.Drawing.Point(124, 215)
         Me.Disc_Video5.Name = "Disc_Video5"
         Me.Disc_Video5.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -935,7 +929,7 @@ Partial Class FMain
         Me.Disc_Video4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video4.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video4.InitialImage = Nothing
-        Me.Disc_Video4.Location = New System.Drawing.Point(584, 9)
+        Me.Disc_Video4.Location = New System.Drawing.Point(584, 20)
         Me.Disc_Video4.Name = "Disc_Video4"
         Me.Disc_Video4.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -949,7 +943,7 @@ Partial Class FMain
         Me.Disc_Video3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video3.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video3.InitialImage = Nothing
-        Me.Disc_Video3.Location = New System.Drawing.Point(431, 9)
+        Me.Disc_Video3.Location = New System.Drawing.Point(431, 20)
         Me.Disc_Video3.Name = "Disc_Video3"
         Me.Disc_Video3.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -963,7 +957,7 @@ Partial Class FMain
         Me.Disc_Video2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video2.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video2.InitialImage = Nothing
-        Me.Disc_Video2.Location = New System.Drawing.Point(277, 9)
+        Me.Disc_Video2.Location = New System.Drawing.Point(277, 20)
         Me.Disc_Video2.Name = "Disc_Video2"
         Me.Disc_Video2.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -977,7 +971,7 @@ Partial Class FMain
         Me.Disc_Video1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disc_Video1.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.Disc_Video1.InitialImage = Nothing
-        Me.Disc_Video1.Location = New System.Drawing.Point(124, 9)
+        Me.Disc_Video1.Location = New System.Drawing.Point(124, 20)
         Me.Disc_Video1.Name = "Disc_Video1"
         Me.Disc_Video1.Size = New System.Drawing.Size(31, 22)
         Me.Disc_Video1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -991,7 +985,7 @@ Partial Class FMain
         Me.Disk_New1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.Disk_New1.Image = Global.Rockola_v3.My.Resources.Resources._New
         Me.Disk_New1.InitialImage = Nothing
-        Me.Disk_New1.Location = New System.Drawing.Point(67, 12)
+        Me.Disk_New1.Location = New System.Drawing.Point(67, 23)
         Me.Disk_New1.Name = "Disk_New1"
         Me.Disk_New1.Size = New System.Drawing.Size(41, 18)
         Me.Disk_New1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1004,7 +998,7 @@ Partial Class FMain
         Me.oDisc_LabelA1.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelA1.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelA1.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelA1.Location = New System.Drawing.Point(6, 165)
+        Me.oDisc_LabelA1.Location = New System.Drawing.Point(6, 176)
         Me.oDisc_LabelA1.Name = "oDisc_LabelA1"
         Me.oDisc_LabelA1.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelA1.TabIndex = 44
@@ -1016,7 +1010,7 @@ Partial Class FMain
         Me.oDisc_LabelB1.BackColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.oDisc_LabelB1.Font = New System.Drawing.Font("Palatino Linotype", 9.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.oDisc_LabelB1.ForeColor = System.Drawing.Color.Yellow
-        Me.oDisc_LabelB1.Location = New System.Drawing.Point(6, 183)
+        Me.oDisc_LabelB1.Location = New System.Drawing.Point(6, 194)
         Me.oDisc_LabelB1.Name = "oDisc_LabelB1"
         Me.oDisc_LabelB1.Size = New System.Drawing.Size(150, 18)
         Me.oDisc_LabelB1.TabIndex = 43
@@ -1029,7 +1023,7 @@ Partial Class FMain
         Me.Disc_Num12.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num12.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num12.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num12.Location = New System.Drawing.Point(460, 403)
+        Me.Disc_Num12.Location = New System.Drawing.Point(460, 418)
         Me.Disc_Num12.Name = "Disc_Num12"
         Me.Disc_Num12.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num12.TabIndex = 41
@@ -1042,7 +1036,7 @@ Partial Class FMain
         Me.Disc_Num11.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num11.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num11.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num11.Location = New System.Drawing.Point(307, 403)
+        Me.Disc_Num11.Location = New System.Drawing.Point(307, 418)
         Me.Disc_Num11.Name = "Disc_Num11"
         Me.Disc_Num11.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num11.TabIndex = 39
@@ -1055,7 +1049,7 @@ Partial Class FMain
         Me.Disc_Num10.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num10.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num10.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num10.Location = New System.Drawing.Point(154, 403)
+        Me.Disc_Num10.Location = New System.Drawing.Point(154, 418)
         Me.Disc_Num10.Name = "Disc_Num10"
         Me.Disc_Num10.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num10.TabIndex = 37
@@ -1068,7 +1062,7 @@ Partial Class FMain
         Me.Disc_Num9.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num9.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Strikeout), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num9.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num9.Location = New System.Drawing.Point(1, 403)
+        Me.Disc_Num9.Location = New System.Drawing.Point(1, 418)
         Me.Disc_Num9.Name = "Disc_Num9"
         Me.Disc_Num9.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num9.TabIndex = 35
@@ -1081,7 +1075,7 @@ Partial Class FMain
         Me.Disc_Num8.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num8.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num8.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num8.Location = New System.Drawing.Point(460, 206)
+        Me.Disc_Num8.Location = New System.Drawing.Point(460, 217)
         Me.Disc_Num8.Name = "Disc_Num8"
         Me.Disc_Num8.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num8.TabIndex = 33
@@ -1094,7 +1088,7 @@ Partial Class FMain
         Me.Disc_Num7.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num7.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num7.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num7.Location = New System.Drawing.Point(307, 206)
+        Me.Disc_Num7.Location = New System.Drawing.Point(307, 217)
         Me.Disc_Num7.Name = "Disc_Num7"
         Me.Disc_Num7.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num7.TabIndex = 31
@@ -1107,7 +1101,7 @@ Partial Class FMain
         Me.Disc_Num6.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num6.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num6.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num6.Location = New System.Drawing.Point(154, 206)
+        Me.Disc_Num6.Location = New System.Drawing.Point(154, 217)
         Me.Disc_Num6.Name = "Disc_Num6"
         Me.Disc_Num6.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num6.TabIndex = 29
@@ -1120,7 +1114,7 @@ Partial Class FMain
         Me.Disc_Num5.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num5.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num5.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num5.Location = New System.Drawing.Point(1, 206)
+        Me.Disc_Num5.Location = New System.Drawing.Point(1, 217)
         Me.Disc_Num5.Name = "Disc_Num5"
         Me.Disc_Num5.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num5.TabIndex = 27
@@ -1133,7 +1127,7 @@ Partial Class FMain
         Me.Disc_Num4.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num4.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num4.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num4.Location = New System.Drawing.Point(460, 9)
+        Me.Disc_Num4.Location = New System.Drawing.Point(460, 20)
         Me.Disc_Num4.Name = "Disc_Num4"
         Me.Disc_Num4.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num4.TabIndex = 25
@@ -1146,7 +1140,7 @@ Partial Class FMain
         Me.Disc_Num3.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num3.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num3.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num3.Location = New System.Drawing.Point(307, 9)
+        Me.Disc_Num3.Location = New System.Drawing.Point(307, 20)
         Me.Disc_Num3.Name = "Disc_Num3"
         Me.Disc_Num3.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num3.TabIndex = 23
@@ -1159,7 +1153,7 @@ Partial Class FMain
         Me.Disc_Num2.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num2.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num2.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num2.Location = New System.Drawing.Point(154, 9)
+        Me.Disc_Num2.Location = New System.Drawing.Point(154, 20)
         Me.Disc_Num2.Name = "Disc_Num2"
         Me.Disc_Num2.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num2.TabIndex = 21
@@ -1173,7 +1167,7 @@ Partial Class FMain
         Me.Disc_Img12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img12.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img12.InitialImage = Nothing
-        Me.Disc_Img12.Location = New System.Drawing.Point(465, 425)
+        Me.Disc_Img12.Location = New System.Drawing.Point(465, 440)
         Me.Disc_Img12.Name = "Disc_Img12"
         Me.Disc_Img12.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img12.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1187,7 +1181,7 @@ Partial Class FMain
         Me.Disc_Img11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img11.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img11.InitialImage = Nothing
-        Me.Disc_Img11.Location = New System.Drawing.Point(312, 425)
+        Me.Disc_Img11.Location = New System.Drawing.Point(312, 440)
         Me.Disc_Img11.Name = "Disc_Img11"
         Me.Disc_Img11.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img11.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1201,7 +1195,7 @@ Partial Class FMain
         Me.Disc_Img10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img10.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img10.InitialImage = Nothing
-        Me.Disc_Img10.Location = New System.Drawing.Point(159, 425)
+        Me.Disc_Img10.Location = New System.Drawing.Point(159, 440)
         Me.Disc_Img10.Name = "Disc_Img10"
         Me.Disc_Img10.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1215,7 +1209,7 @@ Partial Class FMain
         Me.Disc_Img9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img9.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img9.InitialImage = Nothing
-        Me.Disc_Img9.Location = New System.Drawing.Point(6, 425)
+        Me.Disc_Img9.Location = New System.Drawing.Point(6, 440)
         Me.Disc_Img9.Name = "Disc_Img9"
         Me.Disc_Img9.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1229,7 +1223,7 @@ Partial Class FMain
         Me.Disc_Img8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img8.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img8.InitialImage = Nothing
-        Me.Disc_Img8.Location = New System.Drawing.Point(465, 228)
+        Me.Disc_Img8.Location = New System.Drawing.Point(465, 239)
         Me.Disc_Img8.Name = "Disc_Img8"
         Me.Disc_Img8.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1243,7 +1237,7 @@ Partial Class FMain
         Me.Disc_Img7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img7.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img7.InitialImage = Nothing
-        Me.Disc_Img7.Location = New System.Drawing.Point(312, 228)
+        Me.Disc_Img7.Location = New System.Drawing.Point(312, 239)
         Me.Disc_Img7.Name = "Disc_Img7"
         Me.Disc_Img7.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1257,7 +1251,7 @@ Partial Class FMain
         Me.Disc_Img6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img6.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img6.InitialImage = Nothing
-        Me.Disc_Img6.Location = New System.Drawing.Point(159, 228)
+        Me.Disc_Img6.Location = New System.Drawing.Point(159, 239)
         Me.Disc_Img6.Name = "Disc_Img6"
         Me.Disc_Img6.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1271,7 +1265,7 @@ Partial Class FMain
         Me.Disc_Img5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img5.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img5.InitialImage = Nothing
-        Me.Disc_Img5.Location = New System.Drawing.Point(6, 228)
+        Me.Disc_Img5.Location = New System.Drawing.Point(6, 239)
         Me.Disc_Img5.Name = "Disc_Img5"
         Me.Disc_Img5.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1285,7 +1279,7 @@ Partial Class FMain
         Me.Disc_Img4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img4.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img4.InitialImage = Nothing
-        Me.Disc_Img4.Location = New System.Drawing.Point(465, 31)
+        Me.Disc_Img4.Location = New System.Drawing.Point(465, 42)
         Me.Disc_Img4.Name = "Disc_Img4"
         Me.Disc_Img4.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1298,7 +1292,7 @@ Partial Class FMain
         Me.Disc_Num1.BackColor = System.Drawing.Color.Transparent
         Me.Disc_Num1.Font = New System.Drawing.Font("Digital dream Fat Narrow", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Disc_Num1.ForeColor = System.Drawing.Color.LightGreen
-        Me.Disc_Num1.Location = New System.Drawing.Point(1, 9)
+        Me.Disc_Num1.Location = New System.Drawing.Point(2, 20)
         Me.Disc_Num1.Name = "Disc_Num1"
         Me.Disc_Num1.Size = New System.Drawing.Size(52, 21)
         Me.Disc_Num1.TabIndex = 10
@@ -1312,7 +1306,7 @@ Partial Class FMain
         Me.Disc_Img3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img3.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img3.InitialImage = Nothing
-        Me.Disc_Img3.Location = New System.Drawing.Point(312, 31)
+        Me.Disc_Img3.Location = New System.Drawing.Point(312, 42)
         Me.Disc_Img3.Name = "Disc_Img3"
         Me.Disc_Img3.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1326,7 +1320,7 @@ Partial Class FMain
         Me.Disc_Img2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Disc_Img2.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img2.InitialImage = Nothing
-        Me.Disc_Img2.Location = New System.Drawing.Point(159, 31)
+        Me.Disc_Img2.Location = New System.Drawing.Point(159, 42)
         Me.Disc_Img2.Name = "Disc_Img2"
         Me.Disc_Img2.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1341,7 +1335,7 @@ Partial Class FMain
         Me.Disc_Img1.Cursor = System.Windows.Forms.Cursors.Hand
         Me.Disc_Img1.ImageLocation = ""
         Me.Disc_Img1.InitialImage = Nothing
-        Me.Disc_Img1.Location = New System.Drawing.Point(6, 31)
+        Me.Disc_Img1.Location = New System.Drawing.Point(6, 42)
         Me.Disc_Img1.Name = "Disc_Img1"
         Me.Disc_Img1.Size = New System.Drawing.Size(150, 152)
         Me.Disc_Img1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1381,12 +1375,14 @@ Partial Class FMain
         Me.oGrpBox_Can.Controls.Add(Me.oICancVideo3)
         Me.oGrpBox_Can.Controls.Add(Me.oICancVideo2)
         Me.oGrpBox_Can.Controls.Add(Me.oICancVideo1)
-        Me.oGrpBox_Can.ForeColor = System.Drawing.SystemColors.ControlText
-        Me.oGrpBox_Can.Location = New System.Drawing.Point(379, 12)
+        Me.oGrpBox_Can.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.oGrpBox_Can.ForeColor = System.Drawing.Color.Yellow
+        Me.oGrpBox_Can.Location = New System.Drawing.Point(431, 9)
         Me.oGrpBox_Can.Name = "oGrpBox_Can"
         Me.oGrpBox_Can.Size = New System.Drawing.Size(53, 55)
         Me.oGrpBox_Can.TabIndex = 8
         Me.oGrpBox_Can.TabStop = False
+        Me.oGrpBox_Can.Text = "Canc."
         '
         'oICancVideo15
         '
@@ -1416,7 +1412,7 @@ Partial Class FMain
         '
         Me.oICancVideo13.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo13.InitialImage = Nothing
-        Me.oICancVideo13.Location = New System.Drawing.Point(4, 496)
+        Me.oICancVideo13.Location = New System.Drawing.Point(4, 500)
         Me.oICancVideo13.Name = "oICancVideo13"
         Me.oICancVideo13.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo13.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1428,7 +1424,7 @@ Partial Class FMain
         '
         Me.oICancVideo12.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo12.InitialImage = Nothing
-        Me.oICancVideo12.Location = New System.Drawing.Point(4, 456)
+        Me.oICancVideo12.Location = New System.Drawing.Point(4, 460)
         Me.oICancVideo12.Name = "oICancVideo12"
         Me.oICancVideo12.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo12.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1440,7 +1436,7 @@ Partial Class FMain
         '
         Me.oICancVideo11.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo11.InitialImage = Nothing
-        Me.oICancVideo11.Location = New System.Drawing.Point(4, 416)
+        Me.oICancVideo11.Location = New System.Drawing.Point(4, 420)
         Me.oICancVideo11.Name = "oICancVideo11"
         Me.oICancVideo11.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo11.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1452,7 +1448,7 @@ Partial Class FMain
         '
         Me.oICancVideo10.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo10.InitialImage = Nothing
-        Me.oICancVideo10.Location = New System.Drawing.Point(4, 376)
+        Me.oICancVideo10.Location = New System.Drawing.Point(4, 380)
         Me.oICancVideo10.Name = "oICancVideo10"
         Me.oICancVideo10.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1464,7 +1460,7 @@ Partial Class FMain
         '
         Me.oICancVideo9.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo9.InitialImage = Nothing
-        Me.oICancVideo9.Location = New System.Drawing.Point(4, 336)
+        Me.oICancVideo9.Location = New System.Drawing.Point(4, 340)
         Me.oICancVideo9.Name = "oICancVideo9"
         Me.oICancVideo9.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1476,7 +1472,7 @@ Partial Class FMain
         '
         Me.oICancVideo8.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo8.InitialImage = Nothing
-        Me.oICancVideo8.Location = New System.Drawing.Point(4, 296)
+        Me.oICancVideo8.Location = New System.Drawing.Point(4, 300)
         Me.oICancVideo8.Name = "oICancVideo8"
         Me.oICancVideo8.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1488,7 +1484,7 @@ Partial Class FMain
         '
         Me.oICancVideo7.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo7.InitialImage = Nothing
-        Me.oICancVideo7.Location = New System.Drawing.Point(4, 256)
+        Me.oICancVideo7.Location = New System.Drawing.Point(4, 260)
         Me.oICancVideo7.Name = "oICancVideo7"
         Me.oICancVideo7.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1500,7 +1496,7 @@ Partial Class FMain
         '
         Me.oICancVideo6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo6.InitialImage = Nothing
-        Me.oICancVideo6.Location = New System.Drawing.Point(4, 216)
+        Me.oICancVideo6.Location = New System.Drawing.Point(4, 220)
         Me.oICancVideo6.Name = "oICancVideo6"
         Me.oICancVideo6.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1512,7 +1508,7 @@ Partial Class FMain
         '
         Me.oICancVideo5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo5.InitialImage = Nothing
-        Me.oICancVideo5.Location = New System.Drawing.Point(4, 176)
+        Me.oICancVideo5.Location = New System.Drawing.Point(4, 180)
         Me.oICancVideo5.Name = "oICancVideo5"
         Me.oICancVideo5.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1550,7 +1546,7 @@ Partial Class FMain
         Me.oLCanc13.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc13.Location = New System.Drawing.Point(48, 500)
         Me.oLCanc13.Name = "oLCanc13"
-        Me.oLCanc13.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc13.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc13.TabIndex = 16
         '
         'oLCanc12
@@ -1561,7 +1557,7 @@ Partial Class FMain
         Me.oLCanc12.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc12.Location = New System.Drawing.Point(48, 460)
         Me.oLCanc12.Name = "oLCanc12"
-        Me.oLCanc12.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc12.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc12.TabIndex = 15
         '
         'oLCanc11
@@ -1572,7 +1568,7 @@ Partial Class FMain
         Me.oLCanc11.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc11.Location = New System.Drawing.Point(48, 420)
         Me.oLCanc11.Name = "oLCanc11"
-        Me.oLCanc11.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc11.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc11.TabIndex = 14
         '
         'oLCanc10
@@ -1583,7 +1579,7 @@ Partial Class FMain
         Me.oLCanc10.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc10.Location = New System.Drawing.Point(48, 380)
         Me.oLCanc10.Name = "oLCanc10"
-        Me.oLCanc10.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc10.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc10.TabIndex = 13
         '
         'oLCanc9
@@ -1594,7 +1590,7 @@ Partial Class FMain
         Me.oLCanc9.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc9.Location = New System.Drawing.Point(48, 340)
         Me.oLCanc9.Name = "oLCanc9"
-        Me.oLCanc9.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc9.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc9.TabIndex = 12
         '
         'oLCanc8
@@ -1605,7 +1601,7 @@ Partial Class FMain
         Me.oLCanc8.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc8.Location = New System.Drawing.Point(48, 300)
         Me.oLCanc8.Name = "oLCanc8"
-        Me.oLCanc8.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc8.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc8.TabIndex = 11
         '
         'oLCanc7
@@ -1616,7 +1612,7 @@ Partial Class FMain
         Me.oLCanc7.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc7.Location = New System.Drawing.Point(48, 260)
         Me.oLCanc7.Name = "oLCanc7"
-        Me.oLCanc7.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc7.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc7.TabIndex = 10
         '
         'oLCanc6
@@ -1627,7 +1623,7 @@ Partial Class FMain
         Me.oLCanc6.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc6.Location = New System.Drawing.Point(48, 220)
         Me.oLCanc6.Name = "oLCanc6"
-        Me.oLCanc6.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc6.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc6.TabIndex = 9
         '
         'oLCanc5
@@ -1638,7 +1634,7 @@ Partial Class FMain
         Me.oLCanc5.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc5.Location = New System.Drawing.Point(48, 180)
         Me.oLCanc5.Name = "oLCanc5"
-        Me.oLCanc5.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc5.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc5.TabIndex = 8
         '
         'oLCanc4
@@ -1649,7 +1645,7 @@ Partial Class FMain
         Me.oLCanc4.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc4.Location = New System.Drawing.Point(48, 140)
         Me.oLCanc4.Name = "oLCanc4"
-        Me.oLCanc4.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc4.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc4.TabIndex = 7
         '
         'oLCanc3
@@ -1660,7 +1656,7 @@ Partial Class FMain
         Me.oLCanc3.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc3.Location = New System.Drawing.Point(48, 100)
         Me.oLCanc3.Name = "oLCanc3"
-        Me.oLCanc3.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc3.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc3.TabIndex = 6
         '
         'oLCanc2
@@ -1671,7 +1667,7 @@ Partial Class FMain
         Me.oLCanc2.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc2.Location = New System.Drawing.Point(48, 60)
         Me.oLCanc2.Name = "oLCanc2"
-        Me.oLCanc2.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc2.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc2.TabIndex = 5
         '
         'oLCanc1
@@ -1682,14 +1678,14 @@ Partial Class FMain
         Me.oLCanc1.ForeColor = System.Drawing.Color.Yellow
         Me.oLCanc1.Location = New System.Drawing.Point(48, 20)
         Me.oLCanc1.Name = "oLCanc1"
-        Me.oLCanc1.Size = New System.Drawing.Size(507, 24)
+        Me.oLCanc1.Size = New System.Drawing.Size(507, 29)
         Me.oLCanc1.TabIndex = 4
         '
         'oICancVideo4
         '
         Me.oICancVideo4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo4.InitialImage = Nothing
-        Me.oICancVideo4.Location = New System.Drawing.Point(4, 136)
+        Me.oICancVideo4.Location = New System.Drawing.Point(4, 140)
         Me.oICancVideo4.Name = "oICancVideo4"
         Me.oICancVideo4.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1701,7 +1697,7 @@ Partial Class FMain
         '
         Me.oICancVideo3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo3.InitialImage = Nothing
-        Me.oICancVideo3.Location = New System.Drawing.Point(4, 96)
+        Me.oICancVideo3.Location = New System.Drawing.Point(4, 100)
         Me.oICancVideo3.Name = "oICancVideo3"
         Me.oICancVideo3.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1713,7 +1709,7 @@ Partial Class FMain
         '
         Me.oICancVideo2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo2.InitialImage = Nothing
-        Me.oICancVideo2.Location = New System.Drawing.Point(4, 56)
+        Me.oICancVideo2.Location = New System.Drawing.Point(4, 60)
         Me.oICancVideo2.Name = "oICancVideo2"
         Me.oICancVideo2.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1725,7 +1721,7 @@ Partial Class FMain
         '
         Me.oICancVideo1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oICancVideo1.InitialImage = Nothing
-        Me.oICancVideo1.Location = New System.Drawing.Point(4, 16)
+        Me.oICancVideo1.Location = New System.Drawing.Point(4, 20)
         Me.oICancVideo1.Name = "oICancVideo1"
         Me.oICancVideo1.Size = New System.Drawing.Size(32, 28)
         Me.oICancVideo1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -1751,12 +1747,14 @@ Partial Class FMain
         Me.oGrpBox_Gen.Controls.Add(Me.oLGenero2)
         Me.oGrpBox_Gen.Controls.Add(Me.oLGenero1)
         Me.oGrpBox_Gen.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.oGrpBox_Gen.ForeColor = System.Drawing.Color.Transparent
-        Me.oGrpBox_Gen.Location = New System.Drawing.Point(307, 20)
+        Me.oGrpBox_Gen.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.oGrpBox_Gen.ForeColor = System.Drawing.Color.Yellow
+        Me.oGrpBox_Gen.Location = New System.Drawing.Point(293, 9)
         Me.oGrpBox_Gen.Name = "oGrpBox_Gen"
         Me.oGrpBox_Gen.Size = New System.Drawing.Size(53, 55)
         Me.oGrpBox_Gen.TabIndex = 9
         Me.oGrpBox_Gen.TabStop = False
+        Me.oGrpBox_Gen.Text = "Gen."
         '
         'oLGenero13
         '
@@ -1766,7 +1764,7 @@ Partial Class FMain
         Me.oLGenero13.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero13.Location = New System.Drawing.Point(48, 500)
         Me.oLGenero13.Name = "oLGenero13"
-        Me.oLGenero13.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero13.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero13.TabIndex = 16
         '
         'oLGenero12
@@ -1777,7 +1775,7 @@ Partial Class FMain
         Me.oLGenero12.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero12.Location = New System.Drawing.Point(48, 460)
         Me.oLGenero12.Name = "oLGenero12"
-        Me.oLGenero12.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero12.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero12.TabIndex = 15
         '
         'oLGenero11
@@ -1788,7 +1786,7 @@ Partial Class FMain
         Me.oLGenero11.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero11.Location = New System.Drawing.Point(48, 420)
         Me.oLGenero11.Name = "oLGenero11"
-        Me.oLGenero11.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero11.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero11.TabIndex = 14
         '
         'oLGenero10
@@ -1799,7 +1797,7 @@ Partial Class FMain
         Me.oLGenero10.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero10.Location = New System.Drawing.Point(48, 380)
         Me.oLGenero10.Name = "oLGenero10"
-        Me.oLGenero10.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero10.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero10.TabIndex = 13
         '
         'oLGenero9
@@ -1810,7 +1808,7 @@ Partial Class FMain
         Me.oLGenero9.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero9.Location = New System.Drawing.Point(48, 340)
         Me.oLGenero9.Name = "oLGenero9"
-        Me.oLGenero9.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero9.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero9.TabIndex = 12
         '
         'oLGenero8
@@ -1821,7 +1819,7 @@ Partial Class FMain
         Me.oLGenero8.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero8.Location = New System.Drawing.Point(48, 300)
         Me.oLGenero8.Name = "oLGenero8"
-        Me.oLGenero8.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero8.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero8.TabIndex = 11
         '
         'oLGenero7
@@ -1832,7 +1830,7 @@ Partial Class FMain
         Me.oLGenero7.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero7.Location = New System.Drawing.Point(48, 260)
         Me.oLGenero7.Name = "oLGenero7"
-        Me.oLGenero7.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero7.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero7.TabIndex = 10
         '
         'oLGenero6
@@ -1843,7 +1841,7 @@ Partial Class FMain
         Me.oLGenero6.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero6.Location = New System.Drawing.Point(48, 220)
         Me.oLGenero6.Name = "oLGenero6"
-        Me.oLGenero6.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero6.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero6.TabIndex = 9
         '
         'oLGenero5
@@ -1854,7 +1852,7 @@ Partial Class FMain
         Me.oLGenero5.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero5.Location = New System.Drawing.Point(48, 180)
         Me.oLGenero5.Name = "oLGenero5"
-        Me.oLGenero5.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero5.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero5.TabIndex = 8
         '
         'oLGenero4
@@ -1865,7 +1863,7 @@ Partial Class FMain
         Me.oLGenero4.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero4.Location = New System.Drawing.Point(48, 140)
         Me.oLGenero4.Name = "oLGenero4"
-        Me.oLGenero4.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero4.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero4.TabIndex = 7
         '
         'oLGenero3
@@ -1876,7 +1874,7 @@ Partial Class FMain
         Me.oLGenero3.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero3.Location = New System.Drawing.Point(48, 100)
         Me.oLGenero3.Name = "oLGenero3"
-        Me.oLGenero3.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero3.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero3.TabIndex = 6
         '
         'oLGenero2
@@ -1887,7 +1885,7 @@ Partial Class FMain
         Me.oLGenero2.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero2.Location = New System.Drawing.Point(48, 60)
         Me.oLGenero2.Name = "oLGenero2"
-        Me.oLGenero2.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero2.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero2.TabIndex = 5
         '
         'oLGenero1
@@ -1898,7 +1896,7 @@ Partial Class FMain
         Me.oLGenero1.ForeColor = System.Drawing.Color.Yellow
         Me.oLGenero1.Location = New System.Drawing.Point(48, 20)
         Me.oLGenero1.Name = "oLGenero1"
-        Me.oLGenero1.Size = New System.Drawing.Size(507, 24)
+        Me.oLGenero1.Size = New System.Drawing.Size(507, 29)
         Me.oLGenero1.TabIndex = 4
         '
         'oLVersion
@@ -1911,33 +1909,10 @@ Partial Class FMain
         Me.oLVersion.TabIndex = 10
         Me.oLVersion.Text = "."
         '
-        'olPaginas2
-        '
-        Me.olPaginas2.BackColor = System.Drawing.Color.Transparent
-        Me.olPaginas2.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.olPaginas2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.olPaginas2.Location = New System.Drawing.Point(31, 444)
-        Me.olPaginas2.Name = "olPaginas2"
-        Me.olPaginas2.Size = New System.Drawing.Size(161, 20)
-        Me.olPaginas2.TabIndex = 11
-        Me.olPaginas2.Text = "<PASAR PÁGINA>"
-        Me.olPaginas2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'olPaginas
-        '
-        Me.olPaginas.BackColor = System.Drawing.Color.Transparent
-        Me.olPaginas.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.olPaginas.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.olPaginas.Location = New System.Drawing.Point(251, 444)
-        Me.olPaginas.Name = "olPaginas"
-        Me.olPaginas.Size = New System.Drawing.Size(122, 20)
-        Me.olPaginas.TabIndex = 12
-        Me.olPaginas.Text = "Página (1) ->1"
-        Me.olPaginas.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'oGrp_in_Sel
         '
         Me.oGrp_in_Sel.BackColor = System.Drawing.Color.White
+        Me.oGrp_in_Sel.Controls.Add(Me.PictureBox1)
         Me.oGrp_in_Sel.Controls.Add(Me.Img_PagNext)
         Me.oGrp_in_Sel.Controls.Add(Me.Img_PagPrev)
         Me.oGrp_in_Sel.Controls.Add(Me.olTimer2)
@@ -1947,11 +1922,24 @@ Partial Class FMain
         Me.oGrp_in_Sel.Controls.Add(Me.Label3)
         Me.oGrp_in_Sel.Controls.Add(Me.Label2)
         Me.oGrp_in_Sel.Controls.Add(Me.Label1)
-        Me.oGrp_in_Sel.Location = New System.Drawing.Point(31, 468)
+        Me.oGrp_in_Sel.Location = New System.Drawing.Point(30, 446)
         Me.oGrp_in_Sel.Name = "oGrp_in_Sel"
         Me.oGrp_in_Sel.Size = New System.Drawing.Size(343, 76)
         Me.oGrp_in_Sel.TabIndex = 13
         Me.oGrp_in_Sel.TabStop = False
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.BackColor = System.Drawing.Color.Transparent
+        Me.PictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.PictureBox1.Image = Global.Rockola_v3.My.Resources.Resources.left_blue_arrow_f2
+        Me.PictureBox1.InitialImage = Nothing
+        Me.PictureBox1.Location = New System.Drawing.Point(188, 28)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(41, 37)
+        Me.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PictureBox1.TabIndex = 49
+        Me.PictureBox1.TabStop = False
         '
         'Img_PagNext
         '
@@ -2074,7 +2062,7 @@ Partial Class FMain
         Me.olLabMetros.BackColor = System.Drawing.Color.White
         Me.olLabMetros.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.olLabMetros.ForeColor = System.Drawing.Color.Black
-        Me.olLabMetros.Location = New System.Drawing.Point(32, 545)
+        Me.olLabMetros.Location = New System.Drawing.Point(6, 525)
         Me.olLabMetros.Name = "olLabMetros"
         Me.olLabMetros.Size = New System.Drawing.Size(143, 16)
         Me.olLabMetros.TabIndex = 19
@@ -2087,7 +2075,7 @@ Partial Class FMain
         Me.olLabMetros2.BackColor = System.Drawing.Color.White
         Me.olLabMetros2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.olLabMetros2.ForeColor = System.Drawing.Color.Black
-        Me.olLabMetros2.Location = New System.Drawing.Point(246, 545)
+        Me.olLabMetros2.Location = New System.Drawing.Point(270, 525)
         Me.olLabMetros2.Name = "olLabMetros2"
         Me.olLabMetros2.Size = New System.Drawing.Size(125, 16)
         Me.olLabMetros2.TabIndex = 20
@@ -2101,7 +2089,7 @@ Partial Class FMain
         Me.olMetros.BackColor = System.Drawing.Color.White
         Me.olMetros.Font = New System.Drawing.Font("Digital dream Fat", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.olMetros.ForeColor = System.Drawing.Color.Black
-        Me.olMetros.Location = New System.Drawing.Point(32, 566)
+        Me.olMetros.Location = New System.Drawing.Point(6, 546)
         Me.olMetros.Name = "olMetros"
         Me.olMetros.Size = New System.Drawing.Size(106, 13)
         Me.olMetros.TabIndex = 21
@@ -2114,7 +2102,7 @@ Partial Class FMain
         Me.olMetros2.BackColor = System.Drawing.Color.White
         Me.olMetros2.Font = New System.Drawing.Font("Digital dream Fat", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.olMetros2.ForeColor = System.Drawing.Color.Black
-        Me.olMetros2.Location = New System.Drawing.Point(265, 566)
+        Me.olMetros2.Location = New System.Drawing.Point(289, 546)
         Me.olMetros2.Name = "olMetros2"
         Me.olMetros2.Size = New System.Drawing.Size(106, 13)
         Me.olMetros2.TabIndex = 22
@@ -2127,7 +2115,7 @@ Partial Class FMain
         Me.oInd_VideoSW.BackColor = System.Drawing.Color.Transparent
         Me.oInd_VideoSW.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oInd_VideoSW.Image = Global.Rockola_v3.My.Resources.Resources.redled
-        Me.oInd_VideoSW.Location = New System.Drawing.Point(31, 130)
+        Me.oInd_VideoSW.Location = New System.Drawing.Point(4, 158)
         Me.oInd_VideoSW.Name = "oInd_VideoSW"
         Me.oInd_VideoSW.Size = New System.Drawing.Size(21, 24)
         Me.oInd_VideoSW.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage
@@ -2186,7 +2174,7 @@ Partial Class FMain
         '
         Me.oLst_Temas_Video.Enabled = False
         Me.oLst_Temas_Video.FormattingEnabled = True
-        Me.oLst_Temas_Video.Location = New System.Drawing.Point(374, 267)
+        Me.oLst_Temas_Video.Location = New System.Drawing.Point(4, 226)
         Me.oLst_Temas_Video.Name = "oLst_Temas_Video"
         Me.oLst_Temas_Video.Size = New System.Drawing.Size(204, 30)
         Me.oLst_Temas_Video.TabIndex = 28
@@ -2210,9 +2198,10 @@ Partial Class FMain
         Me.olCreditos.Cursor = System.Windows.Forms.Cursors.Default
         Me.olCreditos.Font = New System.Drawing.Font("Palatino Linotype", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.olCreditos.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.olCreditos.Location = New System.Drawing.Point(66, 118)
+        Me.olCreditos.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.olCreditos.Location = New System.Drawing.Point(30, 122)
         Me.olCreditos.Name = "olCreditos"
-        Me.olCreditos.Size = New System.Drawing.Size(282, 36)
+        Me.olCreditos.Size = New System.Drawing.Size(340, 33)
         Me.olCreditos.TabIndex = 29
         Me.olCreditos.Text = "CREDITOS(0)"
         Me.olCreditos.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -2222,10 +2211,10 @@ Partial Class FMain
         Me.olTema_Act.BackColor = System.Drawing.Color.Transparent
         Me.olTema_Act.Cursor = System.Windows.Forms.Cursors.Default
         Me.olTema_Act.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.olTema_Act.ForeColor = System.Drawing.Color.Blue
-        Me.olTema_Act.Location = New System.Drawing.Point(81, 9)
+        Me.olTema_Act.ForeColor = System.Drawing.Color.Yellow
+        Me.olTema_Act.Location = New System.Drawing.Point(60, 8)
         Me.olTema_Act.Name = "olTema_Act"
-        Me.olTema_Act.Size = New System.Drawing.Size(235, 28)
+        Me.olTema_Act.Size = New System.Drawing.Size(223, 28)
         Me.olTema_Act.TabIndex = 30
         Me.olTema_Act.Text = "TOCANDO TEMA:.."
         Me.olTema_Act.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -2234,11 +2223,12 @@ Partial Class FMain
         '
         Me.olCred_Msg.BackColor = System.Drawing.Color.Transparent
         Me.olCred_Msg.Cursor = System.Windows.Forms.Cursors.Default
-        Me.olCred_Msg.Font = New System.Drawing.Font("Palatino Linotype", 26.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.olCred_Msg.Font = New System.Drawing.Font("Palatino Linotype", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.olCred_Msg.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.olCred_Msg.Location = New System.Drawing.Point(23, 654)
+        Me.olCred_Msg.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.olCred_Msg.Location = New System.Drawing.Point(27, 92)
         Me.olCred_Msg.Name = "olCred_Msg"
-        Me.olCred_Msg.Size = New System.Drawing.Size(340, 42)
+        Me.olCred_Msg.Size = New System.Drawing.Size(340, 33)
         Me.olCred_Msg.TabIndex = 31
         Me.olCred_Msg.Text = "INSERTE ¢ 0.25"
         Me.olCred_Msg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -2267,15 +2257,16 @@ Partial Class FMain
         '
         'oSetFocus_Codigo
         '
-        Me.oSetFocus_Codigo.Location = New System.Drawing.Point(181, 532)
+        Me.oSetFocus_Codigo.Location = New System.Drawing.Point(14, 502)
         Me.oSetFocus_Codigo.Name = "oSetFocus_Codigo"
         Me.oSetFocus_Codigo.Size = New System.Drawing.Size(100, 20)
         Me.oSetFocus_Codigo.TabIndex = 34
+        Me.oSetFocus_Codigo.Visible = False
         '
         'oService_Info
         '
         Me.oService_Info.BackColor = System.Drawing.Color.Yellow
-        Me.oService_Info.Location = New System.Drawing.Point(438, 20)
+        Me.oService_Info.Location = New System.Drawing.Point(500, 9)
         Me.oService_Info.Name = "oService_Info"
         Me.oService_Info.Size = New System.Drawing.Size(53, 55)
         Me.oService_Info.TabIndex = 35
@@ -2302,17 +2293,19 @@ Partial Class FMain
         'Image2
         '
         Me.Image2.BackColor = System.Drawing.Color.Transparent
-        Me.Image2.Location = New System.Drawing.Point(133, 581)
+        Me.Image2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Image2.Location = New System.Drawing.Point(124, 565)
         Me.Image2.Name = "Image2"
         Me.Image2.Size = New System.Drawing.Size(150, 152)
+        Me.Image2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.Image2.TabIndex = 37
         Me.Image2.TabStop = False
         '
         'TBack4
         '
         Me.TBack4.BackColor = System.Drawing.Color.Transparent
-        Me.TBack4.ForeColor = System.Drawing.Color.Transparent
-        Me.TBack4.Location = New System.Drawing.Point(396, 97)
+        Me.TBack4.ForeColor = System.Drawing.Color.Black
+        Me.TBack4.Location = New System.Drawing.Point(362, 9)
         Me.TBack4.Name = "TBack4"
         Me.TBack4.Size = New System.Drawing.Size(53, 55)
         Me.TBack4.TabIndex = 38
@@ -2323,7 +2316,7 @@ Partial Class FMain
         '
         Me.oLst_A_Tocar.Enabled = False
         Me.oLst_A_Tocar.FormattingEnabled = True
-        Me.oLst_A_Tocar.Location = New System.Drawing.Point(374, 224)
+        Me.oLst_A_Tocar.Location = New System.Drawing.Point(4, 160)
         Me.oLst_A_Tocar.Name = "oLst_A_Tocar"
         Me.oLst_A_Tocar.Size = New System.Drawing.Size(204, 30)
         Me.oLst_A_Tocar.TabIndex = 39
@@ -2333,7 +2326,7 @@ Partial Class FMain
         '
         Me.oLst_Popular.Enabled = False
         Me.oLst_Popular.FormattingEnabled = True
-        Me.oLst_Popular.Location = New System.Drawing.Point(374, 310)
+        Me.oLst_Popular.Location = New System.Drawing.Point(4, 269)
         Me.oLst_Popular.MultiColumn = True
         Me.oLst_Popular.Name = "oLst_Popular"
         Me.oLst_Popular.Size = New System.Drawing.Size(204, 30)
@@ -2344,7 +2337,7 @@ Partial Class FMain
         '
         Me.oLst_Temas_Pub.Enabled = False
         Me.oLst_Temas_Pub.FormattingEnabled = True
-        Me.oLst_Temas_Pub.Location = New System.Drawing.Point(374, 353)
+        Me.oLst_Temas_Pub.Location = New System.Drawing.Point(4, 312)
         Me.oLst_Temas_Pub.Name = "oLst_Temas_Pub"
         Me.oLst_Temas_Pub.Size = New System.Drawing.Size(204, 30)
         Me.oLst_Temas_Pub.TabIndex = 41
@@ -2353,9 +2346,9 @@ Partial Class FMain
         'oImg_Logo1
         '
         Me.oImg_Logo1.BackColor = System.Drawing.Color.Transparent
-        Me.oImg_Logo1.Location = New System.Drawing.Point(524, 259)
+        Me.oImg_Logo1.Location = New System.Drawing.Point(383, 432)
         Me.oImg_Logo1.Name = "oImg_Logo1"
-        Me.oImg_Logo1.Size = New System.Drawing.Size(343, 277)
+        Me.oImg_Logo1.Size = New System.Drawing.Size(41, 52)
         Me.oImg_Logo1.TabIndex = 42
         Me.oImg_Logo1.TabStop = False
         Me.oImg_Logo1.Visible = False
@@ -2364,7 +2357,7 @@ Partial Class FMain
         '
         Me.Label4.AutoSize = True
         Me.Label4.BackColor = System.Drawing.Color.Transparent
-        Me.Label4.Location = New System.Drawing.Point(3, 91)
+        Me.Label4.Location = New System.Drawing.Point(3, 45)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(53, 13)
         Me.Label4.TabIndex = 43
@@ -2374,7 +2367,7 @@ Partial Class FMain
         '
         Me.Label6.AutoSize = True
         Me.Label6.BackColor = System.Drawing.Color.Transparent
-        Me.Label6.Location = New System.Drawing.Point(6, 109)
+        Me.Label6.Location = New System.Drawing.Point(6, 63)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(50, 13)
         Me.Label6.TabIndex = 44
@@ -2384,7 +2377,7 @@ Partial Class FMain
         '
         Me.oLDuracion.AutoSize = True
         Me.oLDuracion.BackColor = System.Drawing.Color.Transparent
-        Me.oLDuracion.Location = New System.Drawing.Point(57, 91)
+        Me.oLDuracion.Location = New System.Drawing.Point(57, 45)
         Me.oLDuracion.Name = "oLDuracion"
         Me.oLDuracion.Size = New System.Drawing.Size(34, 13)
         Me.oLDuracion.TabIndex = 45
@@ -2394,7 +2387,7 @@ Partial Class FMain
         '
         Me.olAct_Pos.AutoSize = True
         Me.olAct_Pos.BackColor = System.Drawing.Color.Transparent
-        Me.olAct_Pos.Location = New System.Drawing.Point(57, 109)
+        Me.olAct_Pos.Location = New System.Drawing.Point(57, 63)
         Me.olAct_Pos.Name = "olAct_Pos"
         Me.olAct_Pos.Size = New System.Drawing.Size(34, 13)
         Me.olAct_Pos.TabIndex = 46
@@ -2402,13 +2395,14 @@ Partial Class FMain
         '
         'otCargador_Music
         '
+        Me.otCargador_Music.Enabled = True
         Me.otCargador_Music.Interval = 1200
         '
         'oLst_Temas_Prom
         '
         Me.oLst_Temas_Prom.Enabled = False
         Me.oLst_Temas_Prom.FormattingEnabled = True
-        Me.oLst_Temas_Prom.Location = New System.Drawing.Point(374, 396)
+        Me.oLst_Temas_Prom.Location = New System.Drawing.Point(4, 355)
         Me.oLst_Temas_Prom.Name = "oLst_Temas_Prom"
         Me.oLst_Temas_Prom.Size = New System.Drawing.Size(204, 30)
         Me.oLst_Temas_Prom.TabIndex = 48
@@ -2423,10 +2417,10 @@ Partial Class FMain
         Me.otTema_Act.Enabled = False
         Me.otTema_Act.Font = New System.Drawing.Font("Digital dream Fat Narrow", 18.0!, System.Drawing.FontStyle.Bold)
         Me.otTema_Act.ForeColor = System.Drawing.Color.Yellow
-        Me.otTema_Act.Location = New System.Drawing.Point(102, 40)
+        Me.otTema_Act.Location = New System.Drawing.Point(98, 43)
         Me.otTema_Act.Mask = "##-##-##"
         Me.otTema_Act.Name = "otTema_Act"
-        Me.otTema_Act.PromptChar = Global.Microsoft.VisualBasic.ChrW(45)
+        Me.otTema_Act.PromptChar = Global.Microsoft.VisualBasic.ChrW(63)
         Me.otTema_Act.Size = New System.Drawing.Size(138, 32)
         Me.otTema_Act.TabIndex = 52
         '
@@ -2436,7 +2430,7 @@ Partial Class FMain
         Me.oImg_c_Video.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
         Me.oImg_c_Video.Image = Global.Rockola_v3.My.Resources.Resources.icn_video_pk
         Me.oImg_c_Video.InitialImage = Nothing
-        Me.oImg_c_Video.Location = New System.Drawing.Point(246, 44)
+        Me.oImg_c_Video.Location = New System.Drawing.Point(242, 45)
         Me.oImg_c_Video.Name = "oImg_c_Video"
         Me.oImg_c_Video.Size = New System.Drawing.Size(32, 28)
         Me.oImg_c_Video.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -2447,7 +2441,7 @@ Partial Class FMain
         'MediaPlayer1
         '
         Me.MediaPlayer1.Enabled = True
-        Me.MediaPlayer1.Location = New System.Drawing.Point(396, 158)
+        Me.MediaPlayer1.Location = New System.Drawing.Point(568, 9)
         Me.MediaPlayer1.Name = "MediaPlayer1"
         Me.MediaPlayer1.OcxState = CType(resources.GetObject("MediaPlayer1.OcxState"), System.Windows.Forms.AxHost.State)
         Me.MediaPlayer1.Size = New System.Drawing.Size(53, 55)
@@ -2462,6 +2456,11 @@ Partial Class FMain
         'oTimer_Srv
         '
         Me.oTimer_Srv.Interval = 20000
+        '
+        'otCargador_Video
+        '
+        Me.otCargador_Video.Enabled = True
+        Me.otCargador_Video.Interval = 1200
         '
         'FMain
         '
@@ -2502,13 +2501,10 @@ Partial Class FMain
         Me.Controls.Add(Me.olLabMetros2)
         Me.Controls.Add(Me.olLabMetros)
         Me.Controls.Add(Me.oGrp_in_Sel)
-        Me.Controls.Add(Me.olPaginas)
-        Me.Controls.Add(Me.olPaginas2)
         Me.Controls.Add(Me.oLVersion)
         Me.Controls.Add(Me.oGrpBox_Can)
         Me.Controls.Add(Me.oLTitulo)
         Me.Controls.Add(Me.olMessage)
-        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.MediaPlayer2)
         Me.Controls.Add(Me.oSetFocus_Codigo)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
@@ -2573,6 +2569,7 @@ Partial Class FMain
         Me.oGrpBox_Gen.ResumeLayout(False)
         Me.oGrp_in_Sel.ResumeLayout(False)
         Me.oGrp_in_Sel.PerformLayout()
+        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Img_PagNext, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Img_PagPrev, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.oInd_VideoSW, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2585,7 +2582,6 @@ Partial Class FMain
 
     End Sub
     Friend WithEvents MediaPlayer2 As AxWMPLib.AxWindowsMediaPlayer
-    Friend WithEvents Button1 As Button
     Friend WithEvents oTime_Mensajes As Timer
     Friend WithEvents olMessage As Label
     Friend WithEvents oLTitulo As Label
@@ -2709,8 +2705,6 @@ Partial Class FMain
     Friend WithEvents oLGenero2 As Label
     Friend WithEvents oLGenero1 As Label
     Friend WithEvents oLVersion As Label
-    Friend WithEvents olPaginas2 As Label
-    Friend WithEvents olPaginas As Label
     Friend WithEvents oGrp_in_Sel As GroupBox
     Friend WithEvents otCodigo As MaskedTextBox
     Friend WithEvents Label3 As Label
@@ -2761,4 +2755,6 @@ Partial Class FMain
     Friend WithEvents MediaPlayer1 As AxWMPLib.AxWindowsMediaPlayer
     Friend WithEvents Timer2 As Timer
     Friend WithEvents oTimer_Srv As Timer
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents otCargador_Video As Timer
 End Class
